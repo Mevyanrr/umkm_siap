@@ -16,18 +16,18 @@ Route::prefix('v1')->group(function () {
     });
 
     Route::middleware('auth:api')->group(function () {
+        //Export Readiness Assessment
+        Route::post('/assessment/submit', [AssessmentController::class, 'submit']);
+        Route::get('/assessment/questions', [AssessmentController::class, 'questions']);
 
-        Route::prefix('assessment')->group(function () {
-            Route::get('questions', [AssessmentController::class, 'questions']);
-            Route::post('submit',   [AssessmentController::class, 'submit']);
-            Route::post('chat',     [AssessmentController::class, 'chat']);
-        });
+        //Market Intelligence
+        Route::post('/market/analyze', [MarketController::class, 'analyze']);
+        Route::get('/market/trade-data', [MarketController::class, 'tradeData']);
+        Route::get('/market/trending-products', [MarketController::class, 'trendingProducts']);
+        Route::get('/market/countries', [MarketController::class, 'countries']);
+        Route::get('/market/categories', [MarketController::class, 'categories']);
 
-        Route::prefix('market')->group(function () {
-            Route::get('trade-data',        [MarketController::class, 'tradeData']);
-            Route::get('trending-products', [MarketController::class, 'trendingProducts']);
-        });
-
+        //B2B E-commerce Catalog
         Route::prefix('catalog')->group(function () {
             Route::get('products',         [CatalogController::class, 'index']);
             Route::get('products/{id}',    [CatalogController::class, 'show']);

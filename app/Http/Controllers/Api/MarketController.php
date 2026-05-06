@@ -3,12 +3,58 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Services\GeminiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class MarketController extends Controller
 {
-    // GET /api/v1/market/trade-data
+    public function __construct(private GeminiService $geminiService) {}
+
+    public function analyze(Request $request)
+    {
+        $assessment = session('last_assessment');
+
+        $productCategory = $request->input('product_category')
+            ?? $assessment['product_category']
+            ?? 'Umum';
+
+        $assessmentScore = $assessment['score'] ?? null;
+        $readinessLevel  = $assessment['level'] ?? null;
+        $strengths       = $assessment['strengths'] ?? [];
+
+        //CALL Gemini Market Intelligence
+        //CALL Gemini Market Intelligence (dengan cache)
+        $cacheKey = 'market_' . md5($productCategory . $assessmentScore . $readinessLevel . implode(',', $strengths));
+
+        $marketResult = Cache::remember($cacheKey, 3600, function () use (
+            $productCategory,
+            $assessmentScore,
+            $readinessLevel,
+            $strengths
+        ) {
+            return $this->geminiService->getMarketIntelligence(
+                productCategory: $productCategory,
+                assessmentScore: $assessmentScore,
+                readinessLevel: $readinessLevel,
+                strengths: $strengths
+            );
+        });
+
+        return response()->json([
+            'product_category'             => $productCategory,
+            'assessment_score'             => $assessmentScore,
+            'readiness_level'              => $readinessLevel,
+            'recommended_countries'        => $marketResult['recommended_countries'] ?? [],
+            'global_trends'                => $marketResult['global_trends'] ?? [],
+            'export_opportunities'         => $marketResult['export_opportunities'] ?? [],
+            'competitor_landscape'         => $marketResult['competitor_landscape'] ?? [],
+            'narrative_summary'            => $marketResult['narrative_summary'] ?? '',
+            'recommended_starting_country' => $marketResult['recommended_starting_country'] ?? '',
+        ]);
+    }
+
+    // GET /api/v1/market/trade-data?hs_code=6211&target_country=JP&year=2024
     public function tradeData(Request $request)
     {
         $validated = $request->validate([
@@ -17,7 +63,9 @@ class MarketController extends Controller
             'year'           => 'nullable|integer|min:2015|max:2025',
         ]);
 
-        $cacheKey = "trade_data_{$validated['hs_code']}_{$validated['target_country']}_{$validated['year']}";
+        $cacheKey = "trade_data_{$validated['hs_code']}_" .
+            ($validated['target_country'] ?? 'WORLD') . "_" .
+            ($validated['year'] ?? 2024);
 
         $data = Cache::remember($cacheKey, 86400, function () use ($validated) {
             return $this->fetchFromITCTradeMap($validated);
@@ -26,7 +74,7 @@ class MarketController extends Controller
         return response()->json($data);
     }
 
-    // GET /api/v1/market/trending-products
+    // GET /api/v1/market/trending-products?category=makanan&limit=10
     public function trendingProducts(Request $request)
     {
         $validated = $request->validate([
@@ -44,9 +92,20 @@ class MarketController extends Controller
         return response()->json(['trending' => $data]);
     }
 
+    // GET /api/v1/market/countries
+    public function countries()
+    {
+        return response()->json(['data' => ['ID', 'US', 'JP', 'AU', 'DE']]);
+    }
+
+    // GET /api/v1/market/categories
+    public function categories()
+    {
+        return response()->json(['data' => ['makanan', 'tekstil', 'furnitur']]);
+    }
+
     private function fetchFromITCTradeMap(array $params): array
     {
-        // TODO: ganti dengan ITC Trade Map API key asli
         return [
             'hs_code'           => $params['hs_code'],
             'target_country'    => $params['target_country'] ?? 'WORLD',
@@ -69,7 +128,6 @@ class MarketController extends Controller
 
     private function fetchTrendingFromBPS(string $category, int $limit): array
     {
-        // TODO: ganti dengan BPS API key asli
         $products = [
             ['product' => 'Kopi Arabika',        'category' => 'makanan',  'growth_pct' => 34, 'top_dest' => ['US', 'EU', 'JP']],
             ['product' => 'Minyak Kelapa Sawit', 'category' => 'makanan',  'growth_pct' => 18, 'top_dest' => ['IN', 'PK', 'EU']],

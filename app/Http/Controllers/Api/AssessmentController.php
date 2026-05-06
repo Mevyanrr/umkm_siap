@@ -3,17 +3,43 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Assessment;
 use App\Services\GeminiService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class AssessmentController extends Controller
 {
-    public function __construct(private GeminiService $gemini) {}
+    public function __construct(private GeminiService $geminiService) {}
 
     public function questions()
     {
         $categories = [
+            [
+                'id'    => 'product_profile',
+                'label' => 'Profil Produk',
+                'questions' => [
+                    [
+                        'id'      => 'q0_product_category',
+                        'text'    => 'Apa kategori utama produk yang ingin Anda ekspor?',
+                        'type'    => 'select',
+                        'options' => [
+                            'Makanan & Minuman',
+                            'Kerajinan Tangan',
+                            'Tekstil & Fashion',
+                            'Kosmetik & Herbal',
+                            'Furnitur & Dekorasi',
+                            'Pertanian & Perkebunan',
+                            'Elektronik & Teknologi',
+                            'Lainnya',
+                        ],
+                    ],
+                    [
+                        'id'   => 'q0_product_name',
+                        'text' => 'Sebutkan nama atau deskripsi singkat produk Anda',
+                        'type' => 'text',
+                    ],
+                ],
+            ],
             [
                 'id'    => 'legal_docs',
                 'label' => 'Kelengkapan Dokumen Legal',
@@ -49,83 +75,103 @@ class AssessmentController extends Controller
 
     public function submit(Request $request)
     {
-        $validated = $request->validate([
-            'answers'               => 'required|array|min:5',
-            'answers.*.question_id' => 'required|string',
-            'answers.*.question'    => 'required|string',
-            'answers.*.value'       => 'required',
-            'product_category'      => 'required|string|max:100',
-            'target_country'        => 'required|string|max:100',
-        ]);
+        $answers = $request->input('answers');
 
-        $score = $this->calculateScore($validated['answers']);
+        // Ekstrak product info
+        $productCategory = collect($answers)
+            ->firstWhere('id', 'q0_product_category')['value'] ?? 'Umum';
 
-        $aiPrediction = $this->gemini->predictExportReadiness(
-            $validated['answers'],
-            $validated['product_category'],
-            $validated['target_country'],
-            $score
-        );
+        $productName = collect($answers)
+            ->firstWhere('id', 'q0_product_name')['value'] ?? '';
 
-        $level = match(true) {
-            $score >= 75 => 'Siap Ekspor',
-            $score >= 50 => 'Siap Bersyarat',
-            default      => 'Belum Siap',
-        };
+        // Hitung skor
+        $score = $this->calculateScore($answers);
+        $level = $this->getReadinessLevel($score);
 
-        $assessment = Assessment::create([
-            'user_id'          => auth('api')->id(),
-            'answers'          => $validated['answers'],
-            'product_category' => $validated['product_category'],
-            'target_country'   => $validated['target_country'],
-            'score'            => $score,
-            'level'            => $level,
-            'ai_prediction'    => $aiPrediction,
-        ]);
+        //CALL Gemini
+        $assessmentResult = Cache::remember(
+        'assessment_' . md5(json_encode($answers)),
+        3600,
+        function () use ($answers, $productCategory, $score) {
+            return $this->geminiService->predictExportReadiness(
+                answers: $answers,
+                productCategory: $productCategory,
+                targetCountry: 'Global',
+                score: $score
+            );
+        }
+    );
 
-        return response()->json([
-            'assessment_id' => $assessment->id,
-            'score'         => $score,
-            'level'         => $level,
-            'ai_prediction' => $aiPrediction,
-            'todo_list'     => $aiPrediction['priority_actions'] ?? [],
-        ]);
+
+        // $assessmentResult = $this->geminiService->predictExportReadiness(
+        //     answers: $answers,
+        //     productCategory: $productCategory,
+        //     targetCountry: 'Global',
+        //     score: $score
+        // );
+
+        $result = [
+            'score'                      => $score,
+            'level'                      => $level,
+            'product_category'           => $productCategory,
+            'product_name'               => $productName,
+            'strengths'                  => $assessmentResult['strengths'] ?? [],
+            'risk_factors'               => $assessmentResult['risk_factors'] ?? [],
+            'narrative'                  => $assessmentResult['narrative'] ?? '',
+            'priority_actions'           => $assessmentResult['priority_actions'] ?? [],
+            'recommended_certifications' => $assessmentResult['recommended_certifications'] ?? [],
+        ];
+
+        // Simpan ke session untuk dipakai Market Intelligence
+        session(['last_assessment' => $result]);
+
+        return response()->json($result);
     }
 
-    public function chat(Request $request)
+    //
+    private function getReadinessLevel(int $score): string
     {
-        $validated = $request->validate([
-            'assessment_id' => 'required|string',
-            'question'      => 'required|string|max:500',
-        ]);
-
-        $assessment = Assessment::where('id', $validated['assessment_id'])
-            ->where('user_id', auth('api')->id())
-            ->firstOrFail();
-
-        $answer = $this->gemini->chatAboutAssessment(
-            $validated['question'],
-            [
-                'score'            => $assessment->score,
-                'level'            => $assessment->level,
-                'product_category' => $assessment->product_category,
-                'target_country'   => $assessment->target_country,
-                'ai_prediction'    => $assessment->ai_prediction,
-            ]
-        );
-
-        return response()->json($answer);
+        return match (true) {
+            $score >= 80 => 'Siap Ekspor',
+            $score >= 60 => 'Siap Ekspor dengan Beberapa Perbaikan',
+            $score >= 40 => 'Perlu Persiapan Lebih Lanjut',
+            default      => 'Belum Siap Ekspor',
+        };
     }
 
     private function calculateScore(array $answers): int
     {
-        $trueCount = collect($answers)->filter(fn($a) => $a['value'] === true)->count();
-        $totalBool = collect($answers)->filter(fn($a) => is_bool($a['value']))->count();
-        $scaleAvg  = collect($answers)->filter(fn($a) => is_numeric($a['value']) && $a['value'] <= 5)->avg('value') ?? 3;
+        $score  = 0;
+        $weight = [
+            'q1'  => 10, // NIB
+            'q2'  => 10, // SNI
+            'q3'  => 8,  // NPWP
+            'q4'  => 7,  // Halal
+            'q5'  => 5,  // Kapasitas (bonus jika > 500)
+            'q6'  => 10, // MOQ
+            'q7'  => 8,  // SOP
+            'q8'  => 12, // Pernah ekspor
+            'q9'  => 15, // Familiar kepabeanan (scale 1-5)
+            'q10' => 15, // Punya buyer
+        ];
 
-        $boolScore  = $totalBool > 0 ? ($trueCount / $totalBool) * 70 : 35;
-        $scaleScore = (($scaleAvg - 1) / 4) * 30;
+        foreach ($answers as $answer) {
+            $id    = $answer['id'] ?? '';
+            $value = $answer['value'] ?? null;
 
-        return (int) round($boolScore + $scaleScore);
+            if (!isset($weight[$id])) continue;
+
+            if ($id === 'q9') {
+                // Scale 1-5 → proporsi dari bobot
+                $score += (int) round(($value / 5) * $weight[$id]);
+            } elseif ($id === 'q5') {
+                // Kapasitas produksi: > 500 unit dapat poin penuh
+                $score += ($value >= 500) ? $weight[$id] : (int) round(($value / 500) * $weight[$id]);
+            } elseif ($value === true || $value === 'true' || $value === 1 || $value === '1') {
+                $score += $weight[$id];
+            }
+        }
+
+        return min($score, 100);
     }
 }
