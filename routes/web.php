@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Web\AssessmentWebController;
 
 // Landing Page
 Route::get('/', function () {
@@ -29,3 +30,17 @@ Route::get('/login/umkm', function () {
 Route::get('/login/buyer', function () {
     return view('auth.login_buyer');
 })->name('login.buyer');
+
+// UMKM Routes
+Route::prefix('umkm')->group(function () {
+    Route::get('/assessment',        [AssessmentWebController::class, 'index'])->name('umkm.assessment');
+    Route::get('/assessment/result', [AssessmentWebController::class, 'result'])->name('umkm.assessment.result');
+
+    // Placeholder routes
+    Route::get('/dashboard', fn() => view('umkm.dashboard'))->name('umkm.dashboard');
+    Route::get('/market',    fn() => view('umkm.market'))->name('umkm.market');
+    Route::get('/catalog',   fn() => view('umkm.catalog'))->name('umkm.catalog');
+    Route::get('/products',  fn() => view('umkm.products'))->name('umkm.products');
+    Route::get('/profile',   fn() => view('umkm.profile'))->name('umkm.profile');
+    Route::get('/settings',  fn() => view('umkm.settings'))->name('umkm.settings');
+});
