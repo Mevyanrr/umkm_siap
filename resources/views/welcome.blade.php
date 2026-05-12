@@ -2,7 +2,7 @@
 
 @push('styles')
 <style>
-    /* ===== NAVBAR ===== */
+    /*TOP NAVBAR*/
     .navbar {
         position: fixed;
         top: 0;
@@ -75,7 +75,7 @@
         background: var(--green);
     }
 
-    /* ===== HERO ===== */
+    /* HERO */
     .hero {
         min-height: 80vh;
         background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 60%, #2a8a6a 100%);
@@ -96,15 +96,16 @@
     }
 
     /* GELEMBUNG-GELEMBUNG PUTIH*/
-.hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-        radial-gradient(circle, rgba(255,255,255,0.04) 50px, transparent 50px);
-    background-size: 120px 120px;
-    z-index: 0;
-}
+    .hero::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image:
+            radial-gradient(circle, rgba(255, 255, 255, 0.04) 50px, transparent 50px);
+        background-size: 120px 120px;
+        z-index: 0;
+    }
+
     .hero-content {
         position: relative;
         z-index: 1;
@@ -153,111 +154,111 @@
         box-shadow: 0 8px 28px rgba(245, 166, 35, 0.5);
     }
 
-   /* ===== SECTION: UNTUK SIAPA ===== */
-.section-cards {
-    padding: 85px 60px;
-    background: var(--white);
-}
+    /* SECTION: UNTUK SIAPA - UMKM ATAU BUYER DESKRIPSI */
+    .section-cards {
+        padding: 85px 60px;
+        background: var(--white);
+    }
 
-.cards-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 28px;
-    max-width: 1100px;
-    margin: 0 auto;
-}
+    .cards-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
 
-.card-umkm {
-    background: var(--green-dark);
-    color: var(--white);
-    border-radius: 20px;
-    padding: 48px 40px;
-    position: relative;
-    overflow: hidden;
-}
+    .card-umkm {
+        background: var(--green-dark);
+        color: var(--white);
+        border-radius: 20px;
+        padding: 48px 40px;
+        position: relative;
+        overflow: hidden;
+    }
 
-.card-buyer {
-    background: var(--yellow-light);
-    color: var(--text-black);
-    border-radius: 20px;
-    padding: 48px 40px;
-    position: relative;
-    overflow: hidden;
-}
+    .card-buyer {
+        background: var(--yellow-light);
+        color: var(--text-black);
+        border-radius: 20px;
+        padding: 48px 40px;
+        position: relative;
+        overflow: hidden;
+    }
 
-.card-umkm::before,
-.card-buyer::before {
-    content: '';
-    position: absolute;
-    right: 20px;
-    top: -40px;
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-}
+    .card-umkm::before,
+    .card-buyer::before {
+        content: '';
+        position: absolute;
+        right: 20px;
+        top: -40px;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+    }
 
-.card-umkm::after,
-.card-buyer::after {
-    content: '';
-    position: absolute;
-    right: -60px;
-    bottom: -60px;
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-}
+    .card-umkm::after,
+    .card-buyer::after {
+        content: '';
+        position: absolute;
+        right: -60px;
+        bottom: -60px;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+    }
 
-.card-umkm::before,
-.card-umkm::after {
-    background: rgba(255, 255, 255, 0.05);
-}
+    .card-umkm::before,
+    .card-umkm::after {
+        background: rgba(255, 255, 255, 0.05);
+    }
 
-.card-buyer::before,
-.card-buyer::after {
-    background: rgba(0, 0, 0, 0.05);
-}
+    .card-buyer::before,
+    .card-buyer::after {
+        background: rgba(0, 0, 0, 0.05);
+    }
 
-.card-title {
-    font-size: 24px;
-    font-weight: 800;
-    margin-bottom: 14px;
-    position: relative;
-    z-index: 1;
-}
+    .card-title {
+        font-size: 24px;
+        font-weight: 800;
+        margin-bottom: 14px;
+        position: relative;
+        z-index: 1;
+    }
 
-.card-desc {
-    font-size: 14px;
-    line-height: 1.7;
-    opacity: 0.85;
-    margin-bottom: 28px;
-    position: relative;
-    z-index: 1;
-}
+    .card-desc {
+        font-size: 14px;
+        line-height: 1.7;
+        opacity: 0.85;
+        margin-bottom: 28px;
+        position: relative;
+        z-index: 1;
+    }
 
-.card-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    position: relative;
-    z-index: 1;
-}
+    .card-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        position: relative;
+        z-index: 1;
+    }
 
-.card-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 14px;
-}
+    .card-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 14px;
+    }
 
-.card-list li::before {
-    content: '✓';
-    font-weight: 700;
-    flex-shrink: 0;
-    margin-top: 1px;
-}
+    .card-list li::before {
+        content: '✓';
+        font-weight: 700;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
 
-    /* ===== SECTION: FITUR ===== */
+    /* SECTION: FITUR*/
     .section-fitur {
         padding: 85px;
         background: var(--gray-bg);
@@ -353,7 +354,7 @@
         color: #448AFF;
     }
 
-    /* ===== SECTION: BOTTOM ===== */
+    /* SECTION: BOTTOM */
     .section-cta {
         padding: 60px 60px;
         background: var(--green-darkmore);
@@ -453,12 +454,12 @@
 {{-- NAVBAR --}}
 <nav class="navbar">
     <a href="/" class="navbar-brand">
-    <img src="{{ asset('images/logo.png') }}" alt="UMKM SIAP"
-         style="height: 52px; width: auto; object-fit: contain;">
-</a>
+        <img src="{{ asset('images/logo.png') }}" alt="UMKM SIAP"
+            style="height: 52px; width: auto; object-fit: contain;">
+    </a>
     <div class="navbar-actions">
-        <a href="{{ route('login') }}" class="btn-masuk">Masuk</a>
-        <a href="{{ route('register') }}" class="btn-daftar">Daftar Gratis</a>
+       <a href="{{ route('login.umkm') }}" class="btn-masuk">Masuk</a>
+<a href="{{ route('register.umkm') }}" class="btn-daftar">Daftar Gratis</a>
     </div>
 </nav>
 
@@ -470,7 +471,7 @@
     <div class="hero-content">
         <h1>Ekspor Produk Indonesia ke <span>Dunia Global</span></h1>
         <p>Platform AI pertama yang membantu UMKM Indonesia siap ekspor — dari penilaian kesiapan, riset pasar, hingga terhubung dengan pembeli internasional.</p>
-        <a href="{{ route('register') }}" class="btn-hero">Mulai Ekspor Sekarang →</a>
+        <a href="{{ ('register.umkm')}}" class="btn-hero">Mulai Ekspor Sekarang →</a>
     </div>
 </section>
 
@@ -536,8 +537,8 @@
     <h2>Siap Mulai Ekspor Hari Ini?</h2>
     <p>Bergabung dengan ribuan UMKM Indonesia yang sudah ekspor ke pasar global.</p>
     <div class="cta-buttons">
-        <a href="{{ route('register') }}?role=umkm" class="btn-cta-primary">Daftar Sebagai UMKM →</a>
-        <a href="{{ route('register') }}?role=buyer" class="btn-cta-outline">Daftar Sebagai Buyer →</a>
+<a href="{{ route('register.umkm') }}" class="btn-cta-primary">Daftar Sebagai UMKM →</a>
+<a href="{{ route('register.buyer') }}" class="btn-cta-outline">Daftar Sebagai Buyer →</a>
     </div>
 </section>
 
