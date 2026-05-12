@@ -155,7 +155,7 @@
 
             <div class="form-group">
                 <label for="nama_pengusaha">Nama Pengusaha</label>
-                <input type="text" id="nama_pengusaha" name="nama_pengusaha"
+                <input type="text" id="nama_pengusaha" name="name"
                        placeholder="ABC Mulia" autocomplete="off">
                 <span class="error-msg" id="err-nama">Nama pengusaha wajib diisi.</span>
             </div>
