@@ -471,7 +471,7 @@
     <div class="hero-content">
         <h1>Ekspor Produk Indonesia ke <span>Dunia Global</span></h1>
         <p>Platform AI pertama yang membantu UMKM Indonesia siap ekspor — dari penilaian kesiapan, riset pasar, hingga terhubung dengan pembeli internasional.</p>
-        <a href="{{ ('register.umkm')}}" class="btn-hero">Mulai Ekspor Sekarang →</a>
+        <a href="{{ route('register.umkm') }}" class="btn-hero">Mulai Ekspor Sekarang →</a>
     </div>
 </section>
 
