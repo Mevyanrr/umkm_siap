@@ -227,9 +227,8 @@
 
 @push('scripts')
 <script>
-    document.getElementById('registerForm').addEventListener('submit', function(e) {
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
         e.preventDefault();
-        let valid = true;
 
         const email    = document.getElementById('email');
         const password = document.getElementById('password');
@@ -237,27 +236,47 @@
         [email, password].forEach(el => el.classList.remove('error', 'success'));
         document.querySelectorAll('.error-msg').forEach(el => el.classList.remove('show'));
 
-
+        let valid = true;
         const emailVal = email.value.trim();
-        if (!emailVal.endsWith('@gmail.com')) {
+        if (!emailVal) {
             email.classList.add('error');
+            document.getElementById('err-email').textContent = 'Email tidak boleh kosong';
             document.getElementById('err-email').classList.add('show');
             valid = false;
         } else { email.classList.add('success'); }
 
-        const passVal = password.value;
-        const passValid = passVal.length >= 8
-            && /[A-Z]/.test(passVal)
-            && /[a-z]/.test(passVal)
-            && /[0-9]/.test(passVal);
-
-        if (!passValid) {
+        if (password.value.length < 8) {
             password.classList.add('error');
             document.getElementById('err-password').classList.add('show');
             valid = false;
         } else { password.classList.add('success'); }
 
-        if (valid) this.submit();
+        if (!valid) return;
+
+        try {
+            const res = await fetch('/api/v1/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: emailVal, password: password.value })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                email.classList.add('error');
+                document.getElementById('err-email').textContent = data.message || 'Email atau password salah';
+                document.getElementById('err-email').classList.add('show');
+                return;
+            }
+
+            localStorage.setItem('token', data.access_token);
+            localStorage.setItem('user', JSON.stringify({ role: data.role }));
+
+            window.location.href = '/umkm/assessment';
+
+        } catch (err) {
+            alert('Gagal login. Coba lagi.');
+        }
     });
 </script>
 @endpush
