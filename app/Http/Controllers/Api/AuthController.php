@@ -57,7 +57,7 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type'   => 'bearer',
             'expires_in'   => config('jwt.ttl') * 60,
-            'role'         => auth()->user()->role,
+            'role'         => auth('api')->user()->role,
         ]);
     }
 
