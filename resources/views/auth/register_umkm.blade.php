@@ -201,8 +201,8 @@
 
             <div class="form-group">
                 <label for="nama_usaha">Nama Usaha</label>
-                <input type="text" id="nama_usaha" name="nama_usaha"
-                       placeholder="PT. Kopi Nusantara" autocomplete="off">
+                <input type="text" id="nama_usaha" name="name"
+                    placeholder="PT. Kopi Nusantara" autocomplete="off">
                 <span class="error-msg" id="err-nama">Nama usaha wajib diisi.</span>
             </div>
 
