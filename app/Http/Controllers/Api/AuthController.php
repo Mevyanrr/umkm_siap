@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+
     // POST /api/v1/auth/register
     public function register(Request $request)
     {
@@ -44,13 +46,21 @@ class AuthController extends Controller
     // POST /api/v1/auth/login
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $request->validate([
             'email'    => 'required|email',
             'password' => 'required|string',
         ]);
 
+        $credentials = $request->only('email', 'password');
+
+        // DEBUG LOGIN
+        dd(Auth::attempt($credentials));
+
+        // kalau berhasil login
         if (! $token = JWTAuth::attempt($credentials)) {
-            return response()->json(['message' => 'Email atau password salah.'], 401);
+            return response()->json([
+                'message' => 'Email atau password salah.'
+            ], 401);
         }
 
         return response()->json([
@@ -66,9 +76,16 @@ class AuthController extends Controller
     {
         try {
             $newToken = JWTAuth::refresh(JWTAuth::getToken());
-            return response()->json(['access_token' => $newToken]);
+
+            return response()->json([
+                'access_token' => $newToken
+            ]);
+
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Token tidak valid.'], 401);
+
+            return response()->json([
+                'message' => 'Token tidak valid.'
+            ], 401);
         }
     }
 
@@ -76,6 +93,9 @@ class AuthController extends Controller
     public function logout()
     {
         JWTAuth::invalidate(JWTAuth::getToken());
-        return response()->json(['message' => 'Berhasil logout.']);
+
+        return response()->json([
+            'message' => 'Berhasil logout.'
+        ]);
     }
 }

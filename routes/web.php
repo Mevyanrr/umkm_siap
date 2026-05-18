@@ -1,31 +1,79 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Web\AuthController as WebAuthController;
 
 // Landing Page
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-// Register
+// Redirect default Laravel auth ke login umkm
+Route::redirect('/login', '/login/umkm')->name('login');
+
+
+// ======================
+// REGISTER
+// ======================
+
+// UMKM
 Route::get('/register/umkm', function () {
     return view('auth.register_umkm');
 })->name('register.umkm');
 
-Route::post('/register/umkm', [AuthController::class, 'register'])->name('register.umkm.post');
+Route::post('/register/umkm', [WebAuthController::class, 'register'])
+    ->name('register.umkm.post');
 
+// Buyer
 Route::get('/register/buyer', function () {
     return view('auth.register_buyer');
 })->name('register.buyer');
 
-Route::post('/register/buyer', [AuthController::class, 'register'])->name('register.buyer.post');
+Route::post('/register/buyer', [WebAuthController::class, 'register'])
+    ->name('register.buyer.post');
 
-// Login
+
+// ======================
+// LOGIN
+// ======================
+
+// UMKM
 Route::get('/login/umkm', function () {
     return view('auth.login_umkm');
 })->name('login.umkm');
 
+Route::post('/login/umkm', [WebAuthController::class, 'login'])
+    ->name('login.umkm.post');
+
+// Buyer
 Route::get('/login/buyer', function () {
     return view('auth.login_buyer');
 })->name('login.buyer');
+
+Route::post('/login/buyer', [WebAuthController::class, 'login'])
+    ->name('login.buyer.post');
+
+
+// ======================
+// DASHBOARD
+// ======================
+
+// Sementara hapus middleware auth dulu
+
+// Dashboard UMKM
+Route::get('/dashboard/umkm', function () {
+    return view('dashboard.umkm');
+})->name('dashboard.umkm');
+
+// Dashboard Buyer
+Route::get('/dashboard/buyer', function () {
+    return view('dashboard.buyer');
+})->name('dashboard.buyer');
+
+
+// ======================
+// LOGOUT
+// ======================
+
+Route::post('/logout', [WebAuthController::class, 'logout'])
+    ->name('logout');
