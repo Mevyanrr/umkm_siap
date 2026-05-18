@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\AuthController as WebAuthController;
+use App\Http\Controllers\Web\AssessmentWebController;
 
 // Landing Page
 Route::get('/', function () {
@@ -16,7 +17,6 @@ Route::redirect('/login', '/login/umkm')->name('login');
 // REGISTER
 // ======================
 
-// UMKM
 Route::get('/register/umkm', function () {
     return view('auth.register_umkm');
 })->name('register.umkm');
@@ -24,7 +24,6 @@ Route::get('/register/umkm', function () {
 Route::post('/register/umkm', [WebAuthController::class, 'register'])
     ->name('register.umkm.post');
 
-// Buyer
 Route::get('/register/buyer', function () {
     return view('auth.register_buyer');
 })->name('register.buyer');
@@ -37,7 +36,6 @@ Route::post('/register/buyer', [WebAuthController::class, 'register'])
 // LOGIN
 // ======================
 
-// UMKM
 Route::get('/login/umkm', function () {
     return view('auth.login_umkm');
 })->name('login.umkm');
@@ -45,7 +43,6 @@ Route::get('/login/umkm', function () {
 Route::post('/login/umkm', [WebAuthController::class, 'login'])
     ->name('login.umkm.post');
 
-// Buyer
 Route::get('/login/buyer', function () {
     return view('auth.login_buyer');
 })->name('login.buyer');
@@ -55,20 +52,29 @@ Route::post('/login/buyer', [WebAuthController::class, 'login'])
 
 
 // ======================
-// DASHBOARD
+// PROTECTED ROUTES
 // ======================
 
-// Sementara hapus middleware auth dulu
+Route::middleware('auth')->group(function () {
 
-// Dashboard UMKM
-Route::get('/dashboard/umkm', function () {
-    return view('dashboard.umkm');
-})->name('dashboard.umkm');
+    // Dashboard UMKM
+    Route::get('/dashboard/umkm', function () {
+        return view('dashboard.umkm');
+    })->name('dashboard.umkm');
 
-// Dashboard Buyer
-Route::get('/dashboard/buyer', function () {
-    return view('dashboard.buyer');
-})->name('dashboard.buyer');
+    // Dashboard Buyer
+    Route::get('/dashboard/buyer', function () {
+        return view('dashboard.buyer');
+    })->name('dashboard.buyer');
+
+    // Assessment
+    Route::get('/umkm/assessment', [AssessmentWebController::class, 'index'])
+        ->name('umkm.assessment');
+
+    Route::get('/umkm/assessment/result', [AssessmentWebController::class, 'result'])
+        ->name('umkm.assessment.result');
+
+});
 
 
 // ======================

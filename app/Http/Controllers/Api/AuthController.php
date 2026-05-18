@@ -6,12 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-
     // POST /api/v1/auth/register
     public function register(Request $request)
     {
@@ -53,21 +51,19 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        // DEBUG LOGIN
-        dd(Auth::attempt($credentials));
-
-        // kalau berhasil login
         if (! $token = JWTAuth::attempt($credentials)) {
             return response()->json([
                 'message' => 'Email atau password salah.'
             ], 401);
         }
 
+        $user = auth('api')->user();
+
         return response()->json([
             'access_token' => $token,
             'token_type'   => 'bearer',
             'expires_in'   => config('jwt.ttl') * 60,
-            'role'         => auth('api')->user()->role,
+            'role'         => $user->role,
         ]);
     }
 
@@ -82,7 +78,6 @@ class AuthController extends Controller
             ]);
 
         } catch (\Exception $e) {
-
             return response()->json([
                 'message' => 'Token tidak valid.'
             ], 401);
