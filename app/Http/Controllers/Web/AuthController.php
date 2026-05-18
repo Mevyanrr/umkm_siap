@@ -10,12 +10,15 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    // Handle register UMKM & Buyer dari form Blade
     public function register(Request $request)
     {
         $role = $request->input('role');
 
+        // =========================
+        // REGISTER UMKM
+        // =========================
         if ($role === 'umkm') {
+
             $request->validate([
                 'nama_usaha' => 'required|string|max:255',
                 'email'      => 'required|email|unique:users,email',
@@ -33,10 +36,19 @@ class AuthController extends Controller
                 'role'     => 'umkm',
             ]);
 
-            Auth::login($user);
+            // AUTO LOGIN
+            Auth::login($user, true);
+
+            // REDIRECT LANGSUNG
             return redirect()->route('dashboard.umkm');
 
-        } elseif ($role === 'buyer') {
+        }
+
+        // =========================
+        // REGISTER BUYER
+        // =========================
+        elseif ($role === 'buyer') {
+
             $request->validate([
                 'nama_pengusaha' => 'required|string|max:255',
                 'email'          => 'required|email|unique:users,email',
@@ -54,11 +66,63 @@ class AuthController extends Controller
                 'role'     => 'buyer',
             ]);
 
-            Auth::login($user);
+            // AUTO LOGIN
+            Auth::login($user, true);
+
+            // REDIRECT LANGSUNG
             return redirect()->route('dashboard.buyer');
 
-        } else {
-            return redirect()->back()->withErrors(['role' => 'Role tidak valid.']);
         }
+
+        // =========================
+        // ROLE TIDAK VALID
+        // =========================
+        else {
+
+            return redirect()->back()->withErrors([
+                'role' => 'Role tidak valid.'
+            ]);
+        }
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials, true)) {
+
+            $request->session()->regenerate();
+
+            $role = Auth::user()->role;
+
+            if ($role === 'umkm') {
+
+                return redirect()->route('dashboard.umkm');
+
+            } elseif ($role === 'buyer') {
+
+                return redirect()->route('dashboard.buyer');
+            }
+        }
+
+        return back()->withErrors([
+            'email' => 'Email atau password salah.',
+        ])->onlyInput('email');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect()->route('home');
     }
 }

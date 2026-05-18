@@ -27,7 +27,10 @@
         background-size: 200px 200px;
     }
 
-    .left-content { position: relative; z-index: 1; }
+    .left-content {
+        position: relative;
+        z-index: 1;
+    }
 
     .brand {
         display: flex;
@@ -35,7 +38,12 @@
         gap: 12px;
         margin-bottom: 36px;
     }
-    .brand img { height: 68px; width: auto; filter: brightness(0) invert(1); }
+
+    .brand img {
+        height: 68px;
+        width: auto;
+        filter: brightness(0) invert(1);
+    }
 
     .left-panel h2 {
         font-size: clamp(28px, 3vw, 40px);
@@ -53,105 +61,220 @@
         max-width: 360px;
     }
 
-    .benefit-list { list-style: none; display: flex; flex-direction: column; gap: 16px; }
-    .benefit-list li {
-        display: flex; align-items: center; gap: 12px;
-        font-size: 14px; color: rgba(255,255,255,0.85);
+    .benefit-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
     }
+
+    .benefit-list li {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 14px;
+        color: rgba(255,255,255,0.85);
+    }
+
     .benefit-list li .check-icon {
-        width: 24px; height: 24px; border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
         background: rgba(255,255,255,0.15);
-        display: flex; align-items: center; justify-content: center;
-        flex-shrink: 0; font-size: 12px; color: var(--white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 12px;
+        color: var(--white);
     }
 
     /* ===== RIGHT PANEL ===== */
     .right-panel {
         width: 50%;
-        display: flex; align-items: center; justify-content: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         padding: 60px 80px;
         background: var(--white);
     }
 
-    .form-wrapper { width: 100%; max-width: 500px; }
+    .form-wrapper {
+        width: 100%;
+        max-width: 500px;
+    }
 
     .form-wrapper h1 {
-        font-size: 32px; font-weight: 800;
-        color: var(--text-black); margin-bottom: 8px;
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--text-black);
+        margin-bottom: 8px;
     }
 
     .form-wrapper .subtitle {
-        font-size: 14px; color: var(--text-muted);
+        font-size: 14px;
+        color: var(--text-muted);
         margin-bottom: 32px;
     }
 
     /* ===== Role Selector ===== */
-    .role-selector { display: flex; gap: 16px; margin-bottom: 24px; }
+    .role-selector {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
 
     .role-card {
         flex: 1;
-        display: flex; flex-direction: column;
-        align-items: center; justify-content: center;
-        gap: 4px; padding: 18.5px 20px;
-        border-radius: 14px; border: 2px solid #BABABA;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        padding: 18.5px 20px;
+        border-radius: 14px;
+        border: 2px solid #BABABA;
         background-color: var(--white);
-        text-decoration: none; cursor: pointer;
+        text-decoration: none;
+        cursor: pointer;
         transition: border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
     }
 
-    .role-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .role-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
 
-    .role-title { font-size: 18px; font-weight: 700; color: var(--text-black); }
-    .role-sub   { font-size: 13px; color: #6b7280; }
+    .role-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text-black);
+    }
 
-    .role-card--umkm.active  { border-color: #2DA44E; background-color: var(--green-light); }
-    .role-card--buyer.active { border-color: #F5A623; background-color: var(--yellow-soft); }
-    .role-card--umkm.inactive { border-color: #BABABA; background-color: var(--white); }
+    .role-sub {
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+    .role-card--umkm.active {
+        border-color: #2DA44E;
+        background-color: var(--green-light);
+    }
+
+    .role-card--buyer.active {
+        border-color: #F5A623;
+        background-color: var(--yellow-soft);
+    }
 
     /* ===== Form Fields ===== */
-    .form-group { margin-bottom: 20px; }
+    .form-group {
+        margin-bottom: 20px;
+    }
+
     .form-group label {
         display: block;
-        font-size: 11px; font-weight: 700;
-        letter-spacing: 1.5px; text-transform: uppercase;
-        color: var(--text-black); margin-bottom: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-black);
+        margin-bottom: 8px;
     }
-    .form-group input {
-        width: 100%; padding: 14px 16px;
-        border: 1.5px solid #e0e0e0; border-radius: 8px;
-        font-size: 14px; font-family: 'Plus Jakarta Sans', sans-serif;
-        color: var(--text-black); background: var(--white);
-        outline: none; transition: border-color 0.2s;
-    }
-    .form-group input::placeholder { color: #bbb; }
-    .form-group input:focus  { border-color: var(--green-dark); }
-    .form-group input.error  { border-color: #e74c3c; }
-    .form-group input.success{ border-color: #27ae60; }
 
-    .error-msg { font-size: 12px; color: #e74c3c; margin-top: 6px; display: none; }
-    .error-msg.show { display: block; }
+    .form-group input {
+        width: 100%;
+        padding: 14px 16px;
+        border: 1.5px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        color: var(--text-black);
+        background: var(--white);
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+    .form-group input::placeholder {
+        color: #bbb;
+    }
+
+    .form-group input:focus {
+        border-color: var(--green-dark);
+    }
+
+    .form-group input.error {
+        border-color: #e74c3c;
+    }
+
+    .form-group input.success {
+        border-color: #27ae60;
+    }
+
+    .error-msg {
+        font-size: 12px;
+        color: #e74c3c;
+        margin-top: 6px;
+        display: none;
+    }
+
+    .error-msg.show {
+        display: block;
+    }
 
     /* ===== Submit Button ===== */
     .btn-submit {
-        width: 100%; padding: 16px;
-        background: var(--green-dark); color: var(--white);
-        font-size: 15px; font-weight: 700;
+        width: 100%;
+        padding: 16px;
+        background: var(--green-dark);
+        color: var(--white);
+        font-size: 15px;
+        font-weight: 700;
         font-family: 'Plus Jakarta Sans', sans-serif;
-        border: none; border-radius: 10px;
-        cursor: pointer; transition: all 0.25s;
-        margin-top: 8px; margin-bottom: 20px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.25s;
+        margin-top: 8px;
+        margin-bottom: 20px;
     }
-    .btn-submit:hover { background: var(--green-darkmore); transform: translateY(-1px); }
 
-    .login-link { text-align: center; font-size: 14px; color: var(--text-muted); }
-    .login-link a { color: var(--text-black); font-weight: 700; text-decoration: underline; }
-    .login-link a:hover { color: var(--green-dark); }
+    .btn-submit:hover {
+        background: var(--green-darkmore);
+        transform: translateY(-1px);
+    }
+
+    .login-link {
+        text-align: center;
+        font-size: 14px;
+        color: var(--text-muted);
+    }
+
+    .login-link a {
+        color: var(--text-black);
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    .login-link a:hover {
+        color: var(--green-dark);
+    }
 
     @media (max-width: 900px) {
-        body { flex-direction: column; }
-        .left-panel, .right-panel { width: 100%; }
-        .left-panel { padding: 48px 32px; }
-        .right-panel { padding: 48px 32px; }
+        body {
+            flex-direction: column;
+        }
+
+        .left-panel,
+        .right-panel {
+            width: 100%;
+        }
+
+        .left-panel {
+            padding: 48px 32px;
+        }
+
+        .right-panel {
+            padding: 48px 32px;
+        }
     }
 </style>
 @endpush
@@ -164,12 +287,28 @@
         <div class="brand">
             <img src="{{ asset('images/logo.png') }}" alt="UMKM SIAP">
         </div>
+
         <h2>Mulai Perjalanan Ekspor Anda</h2>
-        <p>Daftar sekarang dan dapatkan assessment kesiapan ekspor gratis.</p>
+
+        <p>
+            Daftar sekarang dan dapatkan assessment kesiapan ekspor gratis.
+        </p>
+
         <ul class="benefit-list">
-            <li><span class="check-icon">✓</span> Gratis 100% untuk UMKM Indonesia</li>
-            <li><span class="check-icon">✓</span> Panduan lengkap</li>
-            <li><span class="check-icon">✓</span> Deal pertama dalam 30 hari</li>
+            <li>
+                <span class="check-icon">✓</span>
+                Gratis 100% untuk UMKM Indonesia
+            </li>
+
+            <li>
+                <span class="check-icon">✓</span>
+                Panduan lengkap
+            </li>
+
+            <li>
+                <span class="check-icon">✓</span>
+                Deal pertama dalam 30 hari
+            </li>
         </ul>
     </div>
 </div>
@@ -177,49 +316,84 @@
 {{-- RIGHT PANEL --}}
 <div class="right-panel">
     <div class="form-wrapper">
-        <h1>Daftar Akun Gratis</h1>
-        <p class="subtitle">Mulai ekspor atau temukan produk Indonesia hari ini.</p>
+
+        <h1>Login Akun</h1>
+
+        <p class="subtitle">
+            Masuk untuk melanjutkan ke dashboard UMKM SIAP.
+        </p>
 
         {{-- Role Selector --}}
         <div class="role-selector">
-            <a href="{{ route('login.umkm') }}" id="btn-umkm"
-                class="role-card role-card--umkm {{ request()->routeIs('login.umkm') ? 'active' : '' }}">
+
+            <a href="{{ route('login.umkm') }}"
+               class="role-card role-card--umkm {{ request()->routeIs('login.umkm') ? 'active' : '' }}">
+
                 <span class="role-title">UMKM</span>
                 <span class="role-sub">Eksportir</span>
             </a>
-            <a href="{{ route('login.buyer') }}" id="btn-buyer"
-                class="role-card role-card--buyer {{ request()->routeIs('login.buyer') ? 'active' : '' }}">
+
+            <a href="{{ route('login.buyer') }}"
+               class="role-card role-card--buyer {{ request()->routeIs('login.buyer') ? 'active' : '' }}">
+
                 <span class="role-title">Buyer</span>
                 <span class="role-sub">Pembeli</span>
             </a>
+
         </div>
 
-        {{-- Form --}}
-        <form id="registerForm" method="POST" action="{{ route('register.umkm.post') }}" novalidate>
+        {{-- FORM LOGIN --}}
+        <form id="registerForm"
+              method="POST"
+              action="{{ route('login.umkm.post') }}"
+              novalidate>
+
             @csrf
+
             <input type="hidden" name="role" value="umkm">
 
-
+            {{-- EMAIL --}}
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email"
-                       placeholder="nama@gmail.com" autocomplete="off">
-                <span class="error-msg" id="err-email">Email harus menggunakan @gmail.com</span>
+
+                <input type="email"
+                       id="email"
+                       name="email"
+                       placeholder="nama@gmail.com"
+                       autocomplete="off">
+
+                <span class="error-msg" id="err-email">
+                    Email harus menggunakan @gmail.com
+                </span>
             </div>
 
+            {{-- PASSWORD --}}
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password"
+
+                <input type="password"
+                       id="password"
+                       name="password"
                        placeholder="Min. 8 karakter">
-                <span class="error-msg" id="err-password">Password min. 8 karakter, harus ada huruf besar, huruf kecil, dan angka.</span>
+
+                <span class="error-msg" id="err-password">
+                    Password min. 8 karakter, harus ada huruf besar, huruf kecil, dan angka.
+                </span>
             </div>
 
-            <button type="submit" class="btn-submit">Masuk</button>
+            <button type="submit" class="btn-submit">
+                Masuk
+            </button>
+
         </form>
 
         <div class="login-link">
-            Belum punya akun? <a href="{{ route('register.umkm') }}">Daftar sekarang</a>
+            Belum punya akun?
+            <a href="{{ route('register.umkm') }}">
+                Daftar sekarang
+            </a>
         </div>
+
     </div>
 </div>
 
@@ -227,55 +401,63 @@
 
 @push('scripts')
 <script>
-    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+
         e.preventDefault();
 
-        const email    = document.getElementById('email');
+        let valid = true;
+
+        const email = document.getElementById('email');
         const password = document.getElementById('password');
 
-        [email, password].forEach(el => el.classList.remove('error', 'success'));
-        document.querySelectorAll('.error-msg').forEach(el => el.classList.remove('show'));
+        [email, password].forEach(el => {
+            el.classList.remove('error', 'success');
+        });
 
-        let valid = true;
+        document.querySelectorAll('.error-msg').forEach(el => {
+            el.classList.remove('show');
+        });
+
+        // VALIDASI EMAIL
         const emailVal = email.value.trim();
-        if (!emailVal) {
+
+        if (!emailVal.endsWith('@gmail.com')) {
+
             email.classList.add('error');
-            document.getElementById('err-email').textContent = 'Email tidak boleh kosong';
+
             document.getElementById('err-email').classList.add('show');
-            valid = false;
-        } else { email.classList.add('success'); }
 
-        if (password.value.length < 8) {
+            valid = false;
+
+        } else {
+
+            email.classList.add('success');
+        }
+
+        // VALIDASI PASSWORD
+        const passVal = password.value;
+
+        const passValid =
+            passVal.length >= 8 &&
+            /[A-Z]/.test(passVal) &&
+            /[a-z]/.test(passVal) &&
+            /[0-9]/.test(passVal);
+
+        if (!passValid) {
+
             password.classList.add('error');
+
             document.getElementById('err-password').classList.add('show');
+
             valid = false;
-        } else { password.classList.add('success'); }
 
-        if (!valid) return;
+        } else {
 
-        try {
-            const res = await fetch('/api/v1/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: emailVal, password: password.value })
-            });
+            password.classList.add('success');
+        }
 
-            const data = await res.json();
-
-            if (!res.ok) {
-                email.classList.add('error');
-                document.getElementById('err-email').textContent = data.message || 'Email atau password salah';
-                document.getElementById('err-email').classList.add('show');
-                return;
-            }
-
-            localStorage.setItem('token', data.access_token);
-            localStorage.setItem('user', JSON.stringify({ role: data.role }));
-
-            window.location.href = '/umkm/assessment';
-
-        } catch (err) {
-            alert('Gagal login. Coba lagi.');
+        if (valid) {
+            this.submit();
         }
     });
 </script>

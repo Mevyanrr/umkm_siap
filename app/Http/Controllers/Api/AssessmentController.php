@@ -89,18 +89,29 @@ class AssessmentController extends Controller
         $level = $this->getReadinessLevel($score);
 
         //CALL Gemini
-        $assessmentResult = Cache::remember(
-        'assessment_' . md5(json_encode($answers)),
-        3600,
-        function () use ($answers, $productCategory, $score) {
-            return $this->geminiService->predictExportReadiness(
-                answers: $answers,
-                productCategory: $productCategory,
-                targetCountry: 'Global',
-                score: $score
-            );
-        }
-    );
+    //     $assessmentResult = Cache::remember(
+    //     'assessment_' . md5(json_encode($answers)),
+    //     3600,
+    //     function () use ($answers, $productCategory, $score) {
+    //         return $this->geminiService->predictExportReadiness(
+    //             answers: $answers,
+    //             productCategory: $productCategory,
+    //             targetCountry: 'Global',
+    //             score: $score
+    //         );
+    //     }
+    // );
+    $assessmentResult = [
+    'strengths'                  => ['Kapasitas produksi memadai', 'Produk memiliki potensi pasar ekspor'],
+    'risk_factors'               => ['Belum memiliki sertifikasi lengkap', 'Pengalaman ekspor masih minim'],
+    'narrative'                  => 'Berdasarkan assessment, usaha Anda menunjukkan potensi ekspor yang cukup baik namun masih memerlukan beberapa persiapan dokumen dan sertifikasi.',
+    'priority_actions'           => [
+        ['priority' => 'high',   'task' => 'Lengkapi dokumen NIB'],
+        ['priority' => 'high',   'task' => 'Daftarkan sertifikasi SNI'],
+        ['priority' => 'medium', 'task' => 'Ikuti pelatihan ekspor'],
+    ],
+    'recommended_certifications' => ['SNI', 'Halal MUI', 'BPOM'],
+];
 
 
         // $assessmentResult = $this->geminiService->predictExportReadiness(
