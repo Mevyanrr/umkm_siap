@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -36,12 +37,13 @@ class AuthController extends Controller
                 'role'     => 'umkm',
             ]);
 
-            // AUTO LOGIN
             Auth::login($user, true);
+            $request->session()->regenerate();
 
-            // REDIRECT LANGSUNG
-            return redirect()->route('dashboard.umkm');
+            $token = JWTAuth::fromUser($user);
+            session(['jwt_token' => $token]);
 
+            return redirect()->route('umkm.assessment');
         }
 
         // =========================
@@ -66,19 +68,19 @@ class AuthController extends Controller
                 'role'     => 'buyer',
             ]);
 
-            // AUTO LOGIN
             Auth::login($user, true);
+            $request->session()->regenerate();
 
-            // REDIRECT LANGSUNG
+            $token = JWTAuth::fromUser($user);
+            session(['jwt_token' => $token]);
+
             return redirect()->route('dashboard.buyer');
-
         }
 
         // =========================
         // ROLE TIDAK VALID
         // =========================
         else {
-
             return redirect()->back()->withErrors([
                 'role' => 'Role tidak valid.'
             ]);
@@ -92,35 +94,40 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $credentials = $request->only('email', 'password');
+        $user = User::where('email', $request->email)->first();
 
-        if (Auth::attempt($credentials, true)) {
-
-            $request->session()->regenerate();
-
-            $role = Auth::user()->role;
-
-            if ($role === 'umkm') {
-
-                return redirect()->route('dashboard.umkm');
-
-            } elseif ($role === 'buyer') {
-
-                return redirect()->route('dashboard.buyer');
-            }
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return back()->withErrors([
+                'email' => 'Email atau password salah.',
+            ])->onlyInput('email');
         }
 
-        return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ])->onlyInput('email');
+        Auth::login($user, false);
+        $request->session()->regenerate();
+
+        $token = JWTAuth::fromUser($user);
+        session(['jwt_token' => $token]);
+
+        if ($user->role === 'umkm') {
+            return redirect()->route('dashboard.umkm');
+        } elseif ($user->role === 'buyer') {
+            return redirect()->route('dashboard.buyer');
+        }
+
+        return redirect()->route('home');
     }
 
     public function logout(Request $request)
     {
+        try {
+            JWTAuth::invalidate(JWTAuth::getToken());
+        } catch (\Exception $e) {
+            // Token tidak ada, lanjut logout biasa
+        }
+
         Auth::logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
         return redirect()->route('home');

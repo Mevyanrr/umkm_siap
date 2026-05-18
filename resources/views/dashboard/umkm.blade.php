@@ -76,9 +76,7 @@
         transition: background 0.15s;
     }
 
-    .nav-item:hover {
-        background: #F0FAF7;
-    }
+    .nav-item:hover { background: #F0FAF7; }
 
     .nav-item.active {
         background: #E6F5F2;
@@ -86,9 +84,7 @@
         font-weight: 600;
     }
 
-    .nav-spacer {
-        margin-bottom: 16px;
-    }
+    .nav-spacer { margin-bottom: 16px; }
 
     /* ===== USER INFO ===== */
     .sidebar-user {
@@ -246,9 +242,7 @@
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
-    .btn-assessment:hover {
-        opacity: 0.88;
-    }
+    .btn-assessment:hover { opacity: 0.88; }
 
     .score-circle {
         display: flex;
@@ -300,9 +294,7 @@
         border-bottom: 1px solid #F0F4F3;
     }
 
-    .todo-item:last-child {
-        border-bottom: none;
-    }
+    .todo-item:last-child { border-bottom: none; }
 
     .check-done {
         width: 22px;
@@ -360,7 +352,7 @@
             Dashboard
         </a>
 
-        <a href="#" class="nav-item">
+        <a href="{{ route('umkm.assessment') }}" class="nav-item">
             Assessment
         </a>
 
@@ -388,20 +380,13 @@
     </nav>
 
     <div class="sidebar-user">
-
         @auth
         <div class="user-card">
-
             <div class="user-avatar">
                 {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
             </div>
-
             <div style="min-width: 0;">
-
-                <div class="user-name">
-                    {{ Auth::user()->name }}
-                </div>
-
+                <div class="user-name">{{ Auth::user()->name }}</div>
                 <div class="user-role">
                     @if(Auth::user()->provinsi)
                         UMKM · {{ Auth::user()->provinsi }}
@@ -409,145 +394,101 @@
                         UMKM
                     @endif
                 </div>
-
             </div>
         </div>
         @endauth
 
         <form method="POST" action="{{ route('logout') }}">
             @csrf
-
-            <button type="submit" class="btn-logout">
-                Keluar
-            </button>
+            <button type="submit" class="btn-logout">Keluar</button>
         </form>
-
     </div>
 </aside>
 
 <main class="main">
-
-    <div class="page-title">
-        Dashboard UMKM
-    </div>
+    <div class="page-title">Dashboard UMKM</div>
 
     <div class="page-sub">
         Selamat datang kembali,
-
         @auth
             <span>{{ Auth::user()->name }}</span>
         @endauth
-
         ! Lihat progres ekspor Anda.
     </div>
 
     <div class="progress-card">
-
         <div>
             <h2>Progres Kesiapan Ekspor Anda</h2>
-
-            <p>
-                Selesaikan langkah-langkah berikut untuk 100% siap ekspor
-            </p>
-
+            <p>Selesaikan langkah-langkah berikut untuk 100% siap ekspor</p>
             <div class="progress-bar-wrap">
                 <div class="progress-bar-fill"></div>
             </div>
-
-            <div class="progress-pct">
-                65% Lengkap
-            </div>
-
-            <a href="#" class="btn-assessment">
+            <div class="progress-pct">65% Lengkap</div>
+            <a href="{{ route('umkm.assessment') }}" class="btn-assessment">
                 Lanjutkan Assessment →
             </a>
         </div>
-
         <div class="score-circle">
             <span class="score-num">65</span>
             <span class="score-label">Score</span>
         </div>
-
     </div>
 
     <div class="todo-card">
-
-        <div class="todo-header">
-            To-Do List: Menuju 100% Siap Ekspor
-        </div>
+        <div class="todo-header">To-Do List: Menuju 100% Siap Ekspor</div>
 
         <div class="todo-item">
             <div class="check-done">✓</div>
-
             <div>
-                <div class="todo-title-done">
-                    Lengkapi profil UMKM
-                </div>
-
-                <div class="todo-sub">
-                    Produk, kapasitas, sertifikasi
-                </div>
+                <div class="todo-title-done">Lengkapi profil UMKM</div>
+                <div class="todo-sub">Produk, kapasitas, sertifikasi</div>
             </div>
         </div>
 
         <div class="todo-item">
             <div class="check-done">✓</div>
-
             <div>
-                <div class="todo-title-done">
-                    Selesaikan assessment kesiapan ekspor
-                </div>
-
-                <div class="todo-sub">
-                    Score: 65/100
-                </div>
+                <div class="todo-title-done">Selesaikan assessment kesiapan ekspor</div>
+                <div class="todo-sub">Score: 65/100</div>
             </div>
         </div>
 
         <div class="todo-item">
             <div class="check-pending"></div>
-
             <div>
-                <div class="todo-title-pending">
-                    Upload minimal 3 produk ke katalog
-                </div>
-
-                <div class="todo-sub">
-                    1 produk diupload
-                </div>
+                <div class="todo-title-pending">Upload minimal 3 produk ke katalog</div>
+                <div class="todo-sub">1 produk diupload</div>
             </div>
         </div>
 
         <div class="todo-item">
             <div class="check-pending"></div>
-
             <div>
-                <div class="todo-title-pending">
-                    Tambahkan sertifikasi (Halal, SNI, Organic)
-                </div>
-
-                <div class="todo-sub">
-                    Belum ada sertifikasi
-                </div>
+                <div class="todo-title-pending">Tambahkan sertifikasi (Halal, SNI, Organic)</div>
+                <div class="todo-sub">Belum ada sertifikasi</div>
             </div>
         </div>
 
         <div class="todo-item">
             <div class="check-pending"></div>
-
             <div>
-                <div class="todo-title-pending">
-                    Kontak minimal 2 buyer potensial
-                </div>
-
-                <div class="todo-sub">
-                    0 buyer dihubungi
-                </div>
+                <div class="todo-title-pending">Kontak minimal 2 buyer potensial</div>
+                <div class="todo-sub">0 buyer dihubungi</div>
             </div>
         </div>
-
     </div>
-
 </main>
 
 @endsection
+
+@push('scripts')
+<script>
+    @if(session('jwt_token') && Auth::check())
+        localStorage.setItem('token', '{{ session('jwt_token') }}');
+        localStorage.setItem('user', JSON.stringify({
+            name: '{{ Auth::user()->name }}',
+            role: '{{ Auth::user()->role }}'
+        }));
+    @endif
+</script>
+@endpush
