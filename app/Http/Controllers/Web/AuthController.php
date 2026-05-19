@@ -37,7 +37,7 @@ class AuthController extends Controller
                 'role'     => 'umkm',
             ]);
 
-            Auth::login($user, true);
+            Auth::login($user, false);
             $request->session()->regenerate();
 
             $token = JWTAuth::fromUser($user);
@@ -68,7 +68,7 @@ class AuthController extends Controller
                 'role'     => 'buyer',
             ]);
 
-            Auth::login($user, true);
+            Auth::login($user, false);
             $request->session()->regenerate();
 
             $token = JWTAuth::fromUser($user);
@@ -122,7 +122,6 @@ class AuthController extends Controller
         try {
             JWTAuth::invalidate(JWTAuth::getToken());
         } catch (\Exception $e) {
-            // Token tidak ada, lanjut logout biasa
         }
 
         Auth::logout();
