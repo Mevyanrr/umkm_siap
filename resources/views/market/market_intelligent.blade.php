@@ -274,7 +274,7 @@
             </svg>
             <span id="analyzeBtnText">Analisis Pasar</span>
         </button>
-    </div>
+</div>
 
     {{-- Loading --}}
     <div id="loadingArea">
@@ -372,7 +372,6 @@
     </div>{{-- /resultArea --}}
 </div>
 @endsection
-
 @push('scripts')
 <script>
 const TOKEN = localStorage.getItem('token');
@@ -390,7 +389,7 @@ document.getElementById('logoutBtn').onclick = () => {
     window.location.href = '/login/umkm';
 };
 
-/* ── Baca assessment result dari localStorage (di-set oleh assessment/result page) ── */
+/* ── Baca assessment result dari localStorage ── */
 let assessmentData = null;
 try {
     const raw = localStorage.getItem('assessment_result');
@@ -451,7 +450,6 @@ async function runAnalysis() {
     showState('loading');
 
     try {
-        /* Build payload — sertakan context assessment jika ada */
         const body = { product_category: product };
         if (assessmentData) {
             body.assessment_score = assessmentData.score;
@@ -507,7 +505,7 @@ function renderResult(data, product) {
             const reqs   = (c.key_requirements || [])
                 .map(r => `<span class="req-chip">${r}</span>`).join('');
             return `
-            <div class="country-item">
+            <div class="country-item" style="margin-bottom: 16px;">
                 <div class="country-top-row">
                     <div class="country-name-wrap">
                         <span class="country-flag">${flagEmoji(c.country_code)}</span>
@@ -532,14 +530,14 @@ function renderResult(data, product) {
         }).join('')
         : '<p style="font-size:13px;color:#aab0bb">Tidak ada data negara tersedia.</p>';
 
-    /* Animate progress bars setelah DOM update */
+    /* Animate progress bars */
     requestAnimationFrame(() => {
         document.querySelectorAll('.progress-fill[data-w]').forEach(el => {
             el.style.width = el.dataset.w + '%';
         });
     });
 
-    /* 2. INSIGHT AI — export_opportunities sebagai bullet di green card */
+    /* 2. INSIGHT AI */
     const opps = data.export_opportunities || [];
     const insightArea = document.getElementById('insightArea');
 
@@ -548,7 +546,7 @@ function renderResult(data, product) {
             .map(o => `
             <div class="insight-item">
                 <span class="insight-dot">✦</span>
-                <span><strong>${o.opportunity}</strong>: ${o.description}</span>
+                <span><strong>${o.opportunity || o.title}</strong>: ${o.description}</span>
             </div>`).join('');
         insightArea.innerHTML = `
         <div class="insight-block">
@@ -583,7 +581,7 @@ function renderResult(data, product) {
         document.getElementById('recCountryWrap').style.display = 'flex';
     }
 
-    /* 4. GLOBAL TRENDS */
+    /* 4. GLOBAL TRENDS (Dibeberin & ditutup rapi di sini) */
     const trends = data.global_trends || [];
     if (trends.length) {
         const impMap = {
@@ -603,41 +601,48 @@ function renderResult(data, product) {
         document.getElementById('trendsSection').style.display = 'block';
     }
 
-    /* 5. EXPORT OPPORTUNITIES (full list) */
+    /* 5. EXPORT OPPORTUNITIES SECTION */
     if (opps.length) {
-        const urgLabel = { high: 'Urgent', medium: 'Sedang', low: 'Jangka Panjang' };
-        const urgClass = { high: 'urgency-high', medium: 'urgency-medium', low: 'urgency-low' };
-        document.getElementById('oppList').innerHTML = opps.map(o => `
-        <div class="opp-item">
-            <span class="urgency-badge ${urgClass[o.urgency] || 'urgency-low'}">${urgLabel[o.urgency] || o.urgency}</span>
-            <div>
-                <div class="opp-title">${o.opportunity}</div>
-                <div class="opp-desc">${o.description}</div>
-            </div>
-        </div>`).join('');
+        const urgencyClass = { high: 'urgency-high', medium: 'urgency-medium', low: 'urgency-low' };
+        const urgencyLabel = { high: 'Penting', medium: 'Sedang', low: 'Rendah' };
+
+        document.getElementById('oppList').innerHTML = opps.map(o => {
+            const urg = o.urgency || 'medium';
+            return `
+            <div class="opp-item">
+                <span class="urgency-badge ${urgencyClass[urg] || 'urgency-medium'}">${urgencyLabel[urg] || urg}</span>
+                <div>
+                    <div class="opp-title">${o.opportunity || o.title}</div>
+                    <div class="opp-desc">${o.description}</div>
+                </div>
+            </div>`;
+        }).join('');
         document.getElementById('oppSection').style.display = 'block';
     }
 
     /* 6. COMPETITOR LANDSCAPE */
-    const comp = data.competitor_landscape;
-    if (comp && Object.keys(comp).length) {
-        document.getElementById('competitorNames').innerHTML =
-            (comp.main_competitors || []).map(c => `<span class="comp-tag">${c}</span>`).join('');
-        document.getElementById('competitorAdvantage').textContent = comp.indonesia_advantage || '-';
-        document.getElementById('differentiationTips').innerHTML =
-            (comp.differentiation_tips || []).map(t =>
-                `<div class="diff-tip"><span class="diff-tip-arrow">→</span><span>${t}</span></div>`
-            ).join('');
+    if (data.competitor_landscape) {
+        const comp = data.competitor_landscape;
+
+        // Render Competitor Names Chips
+        const compNames = (comp.main_competitor_countries || [])
+            .map(c => `<span class="comp-tag">${c}</span>`).join('');
+        document.getElementById('competitorNames').innerHTML = compNames || '-';
+
+        // Render Advantage
+        document.getElementById('competitorAdvantage').textContent = comp.indonesia_advantages || '-';
+
+        // Render Differentiation Tips
+        const tips = (comp.differentiation_tips || [])
+            .map(t => `
+            <div class="diff-tip">
+                <span class="diff-tip-arrow">→</span>
+                <span>${t}</span>
+            </div>`).join('');
+        document.getElementById('differentiationTips').innerHTML = tips || '-';
+
         document.getElementById('competitorCard').style.display = 'block';
     }
 }
-
-/* ── Auto-run jika user datang dari assessment & product sudah terisi ── */
-window.addEventListener('DOMContentLoaded', () => {
-    const val = document.getElementById('productInput').value.trim();
-    if (assessmentData && val) {
-        setTimeout(runAnalysis, 400);
-    }
-});
 </script>
 @endpush

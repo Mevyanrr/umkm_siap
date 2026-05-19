@@ -23,24 +23,44 @@ class MarketController extends Controller
         $readinessLevel  = $assessment['level'] ?? null;
         $strengths       = $assessment['strengths'] ?? [];
 
-        //CALL Gemini Market Intelligence
-        //CALL Gemini Market Intelligence (dengan cache)
+        // Buat cache key yang unik
         $cacheKey = 'market_' . md5($productCategory . $assessmentScore . $readinessLevel . implode(',', $strengths));
 
-        $marketResult = Cache::remember($cacheKey, 3600, function () use (
-            $productCategory,
-            $assessmentScore,
-            $readinessLevel,
-            $strengths
-        ) {
-            return $this->geminiService->getMarketIntelligence(
-                productCategory: $productCategory,
-                assessmentScore: $assessmentScore,
-                readinessLevel: $readinessLevel,
-                strengths: $strengths
-            );
-        });
+        try {
+            // Ambil dari cache atau panggil GeminiService
+            $marketResult = Cache::remember($cacheKey, 3600, function () use (
+                $productCategory,
+                $assessmentScore,
+                $readinessLevel,
+                $strengths
+            ) {
+                $result = $this->geminiService->getMarketIntelligence(
+                    productCategory: $productCategory,
+                    assessmentScore: $assessmentScore,
+                    readinessLevel: $readinessLevel,
+                    strengths: $strengths
+                );
 
+                // Validasi: Jika service mengembalikan null atau bukan array, lempar Exception
+                if (!$result || !is_array($result)) {
+                    throw new \Exception("Gagal mendapatkan data valid dari Gemini Service.");
+                }
+
+                return $result;
+            });
+        } catch (\Exception $e) {
+            // Jika crash/gagal, hapus cache key yang rusak agar tidak stuck error
+            Cache::forget($cacheKey);
+
+            // Kembalikan respon error yang bersih ke frontend (HTTP 500 terkontrol dengan pesan)
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Layanan analisis pasar sedang sibuk. Silakan coba beberapa saat lagi.',
+                'detail'  => $e->getMessage() // Memudahkan kamu buat debugging di network tab
+            ], 500);
+        }
+
+        // AMAN: Pastikan selalu fallback ke array kosong jika key tidak ditemukan
         return response()->json([
             'product_category'             => $productCategory,
             'assessment_score'             => $assessmentScore,

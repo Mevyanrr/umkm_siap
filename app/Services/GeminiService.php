@@ -62,147 +62,106 @@ PROMPT;
         return $this->callGemini($prompt);
     }
 
-    public function getMarketIntelligence(
+   public function getMarketIntelligence(
         string $productCategory,
         ?int $assessmentScore = null,
         ?string $readinessLevel = null,
         array $strengths = []
     ): array {
-        $contextFromAssessment = '';
-
-        if ($assessmentScore !== null) {
-            $strengthsList = collect($strengths)
-                ->map(fn($s) => "- {$s}")
-                ->join("\n");
-
-            $contextFromAssessment = <<<CONTEXT
-
-**Data dari Hasil Assessment UMKM:**
-- Skor kesiapan ekspor: {$assessmentScore}/100
-- Level kesiapan: {$readinessLevel}
-- Kekuatan utama bisnis:
-{$strengthsList}
-CONTEXT;
-        }
-
+        // DIET KETAT + VALID: Menggunakan panduan tipe data agar Gemini paham tugasnya
         $prompt = <<<PROMPT
-Kamu adalah analis pasar ekspor internasional yang ahli dalam produk UMKM Indonesia.
+Berikan analisis singkat market intelligence ekspor untuk kategori produk: {$productCategory}.
+Konteks UMKM - Skor: {$assessmentScore}/100, Level kesiapan: {$readinessLevel}.
 
-Berikan analisis market intelligence untuk UMKM yang ingin ekspor, berdasarkan data berikut:
-
-**Kategori Produk:** {$productCategory}
-{$contextFromAssessment}
-
-Berikan respons HANYA dalam format JSON berikut (tanpa markdown, tanpa teks tambahan):
+Berikan respons HANYA dalam format JSON murni mengikuti struktur ini tanpa teks tambahan luar:
 {
   "recommended_countries": [
     {
-      "country": "<nama negara>",
+      "country": "<nama negara tujuan>",
       "country_code": "<kode ISO 2 huruf>",
-      "match_score": <angka 0.0-1.0>,
-      "reason": "<alasan singkat 1 kalimat>",
+      "match_score": 0.85,
+      "reason": "<1 kalimat alasan kecocokan>",
       "entry_difficulty": "easy|medium|hard",
-      "estimated_market_size_usd": "<contoh: 2.3B>",
-      "key_requirements": ["<syarat 1>", "<syarat 2>"]
+      "estimated_market_size_usd": "<contoh: 500M>",
+      "key_requirements": ["<syarat utama 1>"]
     }
   ],
   "global_trends": [
     {
-      "trend": "<nama tren>",
+      "trend": "<nama tren pasar>",
       "impact": "positive|negative|neutral",
-      "description": "<deskripsi singkat>"
+      "description": "<deskripsi singkat tren>"
     }
   ],
   "export_opportunities": [
     {
       "opportunity": "<judul peluang>",
-      "description": "<penjelasan 1-2 kalimat>",
+      "description": "<penjelasan singkat>",
       "urgency": "high|medium|low"
     }
   ],
   "competitor_landscape": {
-    "main_competitors": ["<negara pesaing 1>", "<negara pesaing 2>"],
-    "indonesia_advantage": "<keunggulan produk Indonesia>",
-    "differentiation_tips": ["<tips 1>", "<tips 2>"]
+    "main_competitor_countries": ["<negara pesaing>"],
+    "indonesia_advantages": "<keunggulan produk indonesia>",
+    "differentiation_tips": ["<tips bersaing 1>"]
   },
-  "narrative_summary": "<ringkasan 3-4 kalimat dalam Bahasa Indonesia>",
-  "recommended_starting_country": "<1 negara terbaik untuk mulai ekspor>"
+  "narrative_summary": "<ringkasan analisis 2 kalimat dalam Bahasa Indonesia>",
+  "recommended_starting_country": "<1 nama negara terbaik untuk mulai>"
 }
 PROMPT;
 
-        return $this->callGemini($prompt, maxTokens: 2048);
+        // Token dipangkas aman ke 1000 agar hemat kuota harian/menit
+        return $this->callGemini($prompt, maxTokens: 1000);
     }
 
-    public function chatAboutAssessment(string $question, array $assessmentContext): array
+    private function callGemini(string $prompt, int $maxTokens = 1500): array
     {
-        $context = json_encode($assessmentContext, JSON_UNESCAPED_UNICODE);
+        try {
+            $response = Http::timeout(60)
+                ->withHeaders(['Content-Type' => 'application/json'])
+                ->post("{$this->baseUrl}?key={$this->apiKey}", [
+                    'contents' => [
+                        ['parts' => [['text' => $prompt]]]
+                    ],
+                    'generationConfig' => [
+                        'temperature'     => 0.3,
+                        'maxOutputTokens' => $maxTokens,
+                        // PAKSA GEMINI MENGEMBALIKAN JSON MURNI NATIVE
+                        'responseMimeType' => 'application/json',
+                    ],
+                ]);
 
-        $prompt = <<<PROMPT
-Kamu adalah konsultan ekspor UMKM Indonesia. Jawab pertanyaan berikut berdasarkan konteks assessment.
+            if ($response->status() === 429) {
+                Log::warning('Gemini rate limit hit', ['body' => $response->body()]);
+                throw new \Exception('Gemini API rate limit. Coba beberapa saat lagi.');
+            }
 
-Konteks assessment:
-{$context}
+            if ($response->failed()) {
+                Log::error('Gemini API error', [
+                    'status' => $response->status(),
+                    'body'   => $response->body(),
+                ]);
+                throw new \Exception("Gemini API error: {$response->status()}");
+            }
 
-Pertanyaan pengguna: {$question}
+            $text = $response->json('candidates.0.content.parts.0.text');
 
-Berikan respons HANYA dalam format JSON berikut:
-{
-  "answer": "<jawaban dalam Bahasa Indonesia, maksimal 3 paragraf>",
-  "suggested_resources": ["<referensi atau lembaga yang relevan>"]
-}
-PROMPT;
+            if (empty($text)) {
+                throw new \Exception('Gemini mengembalikan respons kosong.');
+            }
 
-        return $this->callGemini($prompt);
+            // Karena sudah pakai responseMimeType, text dijamin JSON murni tanpa ```json
+            $decoded = json_decode(trim($text), true);
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                Log::error('Gemini JSON parse error', ['raw' => $text]);
+                throw new \Exception('Respons AI tidak bisa di-parse sebagai JSON.');
+            }
+
+            return $decoded;
+        } catch (\Exception $e) {
+            Log::error('GeminiService error: ' . $e->getMessage());
+            throw $e;
+        }
     }
-
- private function callGemini(string $prompt, int $maxTokens = 1500): array
-{
-    try {
-        $response = Http::timeout(60)
-            ->withHeaders(['Content-Type' => 'application/json'])
-            ->post("{$this->baseUrl}?key={$this->apiKey}", [
-                'contents' => [
-                    ['parts' => [['text' => $prompt]]]
-                ],
-                'generationConfig' => [
-                    'temperature'     => 0.3,
-                    'maxOutputTokens' => $maxTokens,
-                    // PAKSA GEMINI MENGEMBALIKAN JSON MURNI NATIVE
-                    'responseMimeType' => 'application/json',
-                ],
-            ]);
-
-        if ($response->status() === 429) {
-            Log::warning('Gemini rate limit hit', ['body' => $response->body()]);
-            throw new \Exception('Gemini API rate limit. Coba beberapa saat lagi.');
-        }
-
-        if ($response->failed()) {
-            Log::error('Gemini API error', [
-                'status' => $response->status(),
-                'body'   => $response->body(),
-            ]);
-            throw new \Exception("Gemini API error: {$response->status()}");
-        }
-
-        $text = $response->json('candidates.0.content.parts.0.text');
-
-        if (empty($text)) {
-            throw new \Exception('Gemini mengembalikan respons kosong.');
-        }
-
-        // Karena sudah pakai responseMimeType, text dijamin JSON murni tanpa ```json
-        $decoded = json_decode(trim($text), true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            Log::error('Gemini JSON parse error', ['raw' => $text]);
-            throw new \Exception('Respons AI tidak bisa di-parse sebagai JSON.');
-        }
-
-        return $decoded;
-    } catch (\Exception $e) {
-        Log::error('GeminiService error: ' . $e->getMessage());
-        throw $e;
-    }
-}
 }
