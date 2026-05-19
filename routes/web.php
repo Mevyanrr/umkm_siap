@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\AuthController as WebAuthController;
 use App\Http\Controllers\Web\AssessmentWebController;
+use App\Http\Controllers\Web\ProductController;
 
 // Landing Page
 Route::get('/', function () {
@@ -58,12 +59,12 @@ Route::post('/login/buyer', [WebAuthController::class, 'login'])
 Route::middleware('auth')->group(function () {
 
     // Dashboard UMKM
-    Route::get('/dashboard/umkm', function () {
+    Route::get('/umkm/dashboard', function () {
         return view('dashboard.umkm');
     })->name('dashboard.umkm');
 
     // Dashboard Buyer
-    Route::get('/dashboard/buyer', function () {
+    Route::get('/buyer/dashboard', function () {
         return view('dashboard.buyer');
     })->name('dashboard.buyer');
 
@@ -74,6 +75,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/umkm/assessment/result', [AssessmentWebController::class, 'result'])
         ->name('umkm.assessment.result');
 
+    // Produk Saya
+        Route::get('/umkm/products', [ProductController::class, 'index'])
+            ->name('umkm.produk_saya');
+    
+        Route::post('/umkm/products', [ProductController::class, 'store'])
+            ->name('umkm.produk.store');
+    
+        Route::put('/umkm/products/{id}', [ProductController::class, 'update'])
+            ->name('umkm.produk.update');
+    
+        Route::delete('/umkm/products/{id}', [ProductController::class, 'destroy'])
+            ->name('umkm.produk.destroy');
+
 });
 
 
@@ -82,4 +96,5 @@ Route::middleware('auth')->group(function () {
 // ======================
 
 Route::post('/logout', [WebAuthController::class, 'logout'])
+    ->middleware('auth')
     ->name('logout');
