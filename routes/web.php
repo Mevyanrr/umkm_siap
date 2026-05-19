@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\AuthController as WebAuthController;
 use App\Http\Controllers\Web\AssessmentWebController;
+use App\Http\Controllers\Web\CatalogWebController;
 use App\Http\Controllers\Web\ProductController;
 
 // Landing Page
@@ -61,12 +62,12 @@ Route::middleware('auth')->group(function () {
     // Dashboard UMKM
     Route::get('/umkm/dashboard', function () {
         return view('dashboard.umkm');
-    })->name('dashboard.umkm');
+    })->name('umkm.dashboard');
 
     // Dashboard Buyer
     Route::get('/buyer/dashboard', function () {
         return view('dashboard.buyer');
-    })->name('dashboard.buyer');
+    })->name('buyer.dashboard');
 
     // Assessment
     Route::get('/umkm/assessment', [AssessmentWebController::class, 'index'])
@@ -75,18 +76,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/umkm/assessment/result', [AssessmentWebController::class, 'result'])
         ->name('umkm.assessment.result');
 
+    //Katalog
+    Route::get('/umkm/catalog', [CatalogWebController::class, 'index'])
+        ->name('umkm.catalog');
+
     // Produk Saya
-        Route::get('/umkm/products', [ProductController::class, 'index'])
-            ->name('umkm.produk_saya');
+    Route::get('/umkm/products', [ProductController::class, 'index'])
+        ->name('umkm.produk_saya');
     
-        Route::post('/umkm/products', [ProductController::class, 'store'])
-            ->name('umkm.produk.store');
+    Route::post('/umkm/products', [ProductController::class, 'store'])
+        ->name('umkm.produk.store');
     
-        Route::put('/umkm/products/{id}', [ProductController::class, 'update'])
-            ->name('umkm.produk.update');
+    Route::put('/umkm/products/{id}', [ProductController::class, 'update'])
+        ->name('umkm.produk.update');
     
-        Route::delete('/umkm/products/{id}', [ProductController::class, 'destroy'])
-            ->name('umkm.produk.destroy');
+    Route::delete('/umkm/products/{id}', [ProductController::class, 'destroy'])
+        ->name('umkm.produk.destroy');
 
 });
 
