@@ -155,55 +155,54 @@ PROMPT;
         return $this->callGemini($prompt);
     }
 
-    private function callGemini(string $prompt, int $maxTokens = 1500): array
-    {
-        try {
-            $response = Http::timeout(60)
-                ->withHeaders(['Content-Type' => 'application/json'])
-                ->post("{$this->baseUrl}?key={$this->apiKey}", [
-                    'contents' => [
-                        ['parts' => [['text' => $prompt]]]
-                    ],
-                    'generationConfig' => [
-                        'temperature'     => 0.3,
-                        'maxOutputTokens' => $maxTokens,
-                    ],
-                ]);
+ private function callGemini(string $prompt, int $maxTokens = 1500): array
+{
+    try {
+        $response = Http::timeout(60)
+            ->withHeaders(['Content-Type' => 'application/json'])
+            ->post("{$this->baseUrl}?key={$this->apiKey}", [
+                'contents' => [
+                    ['parts' => [['text' => $prompt]]]
+                ],
+                'generationConfig' => [
+                    'temperature'     => 0.3,
+                    'maxOutputTokens' => $maxTokens,
+                    // PAKSA GEMINI MENGEMBALIKAN JSON MURNI NATIVE
+                    'responseMimeType' => 'application/json',
+                ],
+            ]);
 
-            // Langsung throw, JANGAN retry kalau 429
-            if ($response->status() === 429) {
-                Log::warning('Gemini rate limit hit', [
-                    'body' => $response->body()
-                ]);
-                throw new \Exception('Gemini API rate limit. Coba beberapa saat lagi.');
-            }
-
-            if ($response->failed()) {
-                Log::error('Gemini API error', [
-                    'status' => $response->status(),
-                    'body'   => $response->body(),
-                ]);
-                throw new \Exception("Gemini API error: {$response->status()}");
-            }
-
-            $text = $response->json('candidates.0.content.parts.0.text');
-
-            if (empty($text)) {
-                throw new \Exception('Gemini mengembalikan respons kosong.');
-            }
-
-            $text    = preg_replace('/```json\s*|\s*```/', '', trim($text));
-            $decoded = json_decode($text, true);
-
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                Log::error('Gemini JSON parse error', ['raw' => $text]);
-                throw new \Exception('Respons AI tidak bisa di-parse sebagai JSON.');
-            }
-
-            return $decoded;
-        } catch (\Exception $e) {
-            Log::error('GeminiService error: ' . $e->getMessage());
-            throw $e;
+        if ($response->status() === 429) {
+            Log::warning('Gemini rate limit hit', ['body' => $response->body()]);
+            throw new \Exception('Gemini API rate limit. Coba beberapa saat lagi.');
         }
+
+        if ($response->failed()) {
+            Log::error('Gemini API error', [
+                'status' => $response->status(),
+                'body'   => $response->body(),
+            ]);
+            throw new \Exception("Gemini API error: {$response->status()}");
+        }
+
+        $text = $response->json('candidates.0.content.parts.0.text');
+
+        if (empty($text)) {
+            throw new \Exception('Gemini mengembalikan respons kosong.');
+        }
+
+        // Karena sudah pakai responseMimeType, text dijamin JSON murni tanpa ```json
+        $decoded = json_decode(trim($text), true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            Log::error('Gemini JSON parse error', ['raw' => $text]);
+            throw new \Exception('Respons AI tidak bisa di-parse sebagai JSON.');
+        }
+
+        return $decoded;
+    } catch (\Exception $e) {
+        Log::error('GeminiService error: ' . $e->getMessage());
+        throw $e;
     }
+}
 }

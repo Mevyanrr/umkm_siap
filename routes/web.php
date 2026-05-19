@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Web\AuthController as WebAuthController;
 use App\Http\Controllers\Web\AssessmentWebController;
+use App\Http\Controllers\MarketWebController;
 
 // Landing Page
 Route::get('/', function () {
@@ -74,6 +75,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/umkm/assessment/result', [AssessmentWebController::class, 'result'])
         ->name('umkm.assessment.result');
 
+    // Market Intelligence
+    Route::get('/umkm/market', [MarketWebController::class, 'index'])
+    ->name('umkm.market');
 });
 
 
