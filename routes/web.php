@@ -6,7 +6,9 @@ use App\Http\Controllers\Web\AssessmentWebController;
 use App\Http\Controllers\Web\CatalogWebController;
 use App\Http\Controllers\Web\ProductController;
 use App\Http\Controllers\Web\ProfileController;
-use App\Http\Controllers\MarketWebController;
+use App\Http\Controllers\Web\MarketWebController;
+use App\Http\Controllers\Web\BuyerController;
+use App\Http\Controllers\Web\WhistlistController;
 
 // Landing Page
 Route::get('/', function () {
@@ -66,10 +68,13 @@ Route::middleware('auth')->group(function () {
         return view('dashboard.umkm');
     })->name('dashboard.umkm');
 
-    // Dashboard Buyer
-    Route::get('/buyer/dashboard', function () {
-        return view('dashboard.buyer');
-    })->name('dashboard.buyer');
+    // BUYER
+    // Dashboard Buyer & Saved Products
+    Route::get('/buyer/dashboard', [BuyerController::class, 'dashboard'])
+        ->name('dashboard.buyer');
+
+Route::post('/wishlist/toggle', [WhistlistController::class, 'toggle'])->name('wishlist.toggle');
+Route::get('/buyer/saved', [WhistlistController::class, 'savedProducts'])->name('buyer.saved');
 
     // Assessment
     Route::get('/umkm/assessment', [AssessmentWebController::class, 'index'])
@@ -104,14 +109,19 @@ Route::middleware('auth')->group(function () {
 
     // Market Intelligence
     Route::get('/umkm/market', [MarketWebController::class, 'index'])
-    ->name('umkm.market');
+        ->name('umkm.market');
 });
 
 
 // ======================
-// LOGOUT
+// LOGOUT & AJAX (SUDAH DIPERBERSIH)
 // ======================
 
 Route::post('/logout', [WebAuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
+
+// Toggle wishlist (AJAX)
+Route::post('/wishlist/toggle', [WhistlistController::class, 'toggle'])
+    ->middleware('auth')
+    ->name('wishlist.toggle');

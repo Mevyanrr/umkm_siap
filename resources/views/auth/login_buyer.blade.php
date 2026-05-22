@@ -85,7 +85,7 @@
         outline: none; transition: border-color 0.2s;
     }
     .form-group input::placeholder { color: #bbb; }
-    .form-group input:focus  { border-color: var(--yellow-dark); /* ← kuning saat focus */ }
+    .form-group input:focus  { border-color: var(--yellow-dark); }
     .form-group input.error  { border-color: #e74c3c; }
     .form-group input.success{ border-color: #27ae60; }
 
@@ -94,7 +94,7 @@
 
     .btn-submit {
         width: 100%; padding: 16px;
-        background: var(--yellow-light); /* ← kuning */ color: var(--text-black);
+        background: var(--yellow-light); color: var(--text-black);
         font-size: 15px; font-weight: 700;
         font-family: 'Plus Jakarta Sans', sans-serif;
         border: none; border-radius: 10px;
@@ -133,8 +133,8 @@
 
 <div class="right-panel">
     <div class="form-wrapper">
-        <h1>Daftar Akun Gratis</h1>
-        <p class="subtitle">Mulai ekspor atau temukan produk Indonesia hari ini.</p>
+        <h1>Masuk ke Akun</h1>
+        <p class="subtitle">Selamat datang kembali! Silakan masuk ke dashboard Buyer.</p>
 
         <div class="role-selector">
             <a href="{{ route('login.umkm') }}" id="btn-umkm"
@@ -149,22 +149,28 @@
             </a>
         </div>
 
-        <form id="registerForm" method="POST" action="{{ route('register.buyer.post') }}" novalidate>
+        @if($errors->has('email'))
+            <div style="background-color: #fde8e8; color: #e74c3c; padding: 12px; border-radius: 8px; font-size: 14px; margin-bottom: 16px; font-weight: 600;">
+                {{ $errors->first('email') }}
+            </div>
+        @endif
+
+        <form id="loginForm" method="POST" action="{{ route('login.buyer.post') }}" novalidate>
             @csrf
             <input type="hidden" name="role" value="buyer">
 
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email"
+                <input type="email" id="email" name="email" value="{{ old('email') }}"
                        placeholder="nama@email.com" autocomplete="off">
-                <span class="error-msg" id="err-email">Format email tidak valid.</span>
+                <span class="error-msg" id="err-email">Format email tidak valid atau kosong.</span>
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password"
-                       placeholder="Min. 8 karakter">
-                <span class="error-msg" id="err-password">Password min. 8 karakter, harus ada huruf besar, huruf kecil, dan angka.</span>
+                       placeholder="Masukkan password Anda">
+                <span class="error-msg" id="err-password">Password wajib diisi.</span>
             </div>
 
             <button type="submit" class="btn-submit">Masuk</button>
@@ -180,37 +186,39 @@
 
 @push('scripts')
 <script>
-    document.getElementById('registerForm').addEventListener('submit', function(e) {
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
         let valid = true;
 
         const email    = document.getElementById('email');
         const password = document.getElementById('password');
 
+        // Reset state error sebelumnya
         [email, password].forEach(el => el.classList.remove('error', 'success'));
         document.querySelectorAll('.error-msg').forEach(el => el.classList.remove('show'));
 
-
+        // Validasi Email (Format & Kosong)
         const emailVal = email.value.trim();
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(emailVal)) {
             email.classList.add('error');
             document.getElementById('err-email').classList.add('show');
             valid = false;
-        } else { email.classList.add('success'); }
+        } else {
+            email.classList.add('success');
+        }
 
+        // Validasi Password Login (Hanya cek apakah kosong)
         const passVal = password.value;
-        const passValid = passVal.length >= 8
-            && /[A-Z]/.test(passVal)
-            && /[a-z]/.test(passVal)
-            && /[0-9]/.test(passVal);
-
-        if (!passValid) {
+        if (passVal.length === 0) {
             password.classList.add('error');
             document.getElementById('err-password').classList.add('show');
             valid = false;
-        } else { password.classList.add('success'); }
+        } else {
+            password.classList.add('success');
+        }
 
+        // Jalankan submit form jika JS validasi lolos
         if (valid) this.submit();
     });
 </script>

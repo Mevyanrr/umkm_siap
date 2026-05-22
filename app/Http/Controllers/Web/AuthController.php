@@ -26,7 +26,7 @@ class AuthController extends Controller
                 'password'   => 'required|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
             ], [
                 'nama_usaha.required' => 'Nama usaha wajib diisi.',
-                'email.unique'        => 'Email harus menggunakan @gamil.com',
+                'email.unique'        => 'Email harus menggunakan @gmail.com',
                 'password.regex'      => 'Password harus mengandung huruf besar, huruf kecil, dan angka.',
             ]);
 
@@ -52,17 +52,17 @@ class AuthController extends Controller
         elseif ($role === 'buyer') {
 
             $request->validate([
-                'nama_pengusaha' => 'required|string|max:255',
+                'name' => 'required|string|max:255',
                 'email'          => 'required|email|unique:users,email',
                 'password'       => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
             ], [
-                'nama_pengusaha.required' => 'Nama pengusaha wajib diisi.',
-                'email.unique'            => 'Email harus menggunakan @gamil.com',
+                'name.required' => 'Nama wajib diisi.',
+                'email.unique'            => 'Email harus menggunakan @gmail.com',
                 'password.regex'          => 'Password harus mengandung huruf besar, huruf kecil, dan angka.',
             ]);
 
             $user = User::create([
-                'name'     => $request->nama_pengusaha,
+                'name'     => $request->name,
                 'email'    => $request->email,
                 'password' => Hash::make($request->password),
                 'role'     => 'buyer',
@@ -88,34 +88,35 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-    {
-        $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required|string',
-        ]);
+{
+    $request->validate([
+        'email'    => 'required|email',
+        'password' => 'required|string',
+    ]);
 
-        $user = User::where('email', $request->email)->first();
+    $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return back()->withErrors([
-                'email' => 'Email atau password salah.',
-            ])->onlyInput('email');
-        }
-
-        Auth::login($user, false);
-        $request->session()->regenerate();
-
-        $token = JWTAuth::fromUser($user);
-        session(['jwt_token' => $token]);
-
-        if ($user->role === 'umkm') {
-            return redirect()->route('dashboard.umkm');
-        } elseif ($user->role === 'buyer') {
-            return redirect()->route('dashboard.buyer');
-        }
-
-        return redirect()->route('home');
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return back()->withErrors([
+            'email' => 'Email atau password salah.',
+        ])->onlyInput('email');
     }
+
+    Auth::login($user, false);
+    $request->session()->regenerate();
+
+    $token = JWTAuth::fromUser($user);
+    session(['jwt_token' => $token]);
+
+
+    if ($user->role === 'umkm') {
+        return redirect()->route('dashboard.umkm');
+    } elseif ($user->role === 'buyer') {
+        return redirect()->route('dashboard.buyer');
+    }
+
+    return redirect()->route('home');
+}
 
     public function logout(Request $request)
     {
