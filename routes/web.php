@@ -5,6 +5,7 @@ use App\Http\Controllers\Web\AuthController as WebAuthController;
 use App\Http\Controllers\Web\AssessmentWebController;
 use App\Http\Controllers\Web\CatalogWebController;
 use App\Http\Controllers\Web\ProductController;
+use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\MarketWebController;
 
 // Landing Page
@@ -63,12 +64,12 @@ Route::middleware('auth')->group(function () {
     // Dashboard UMKM
     Route::get('/umkm/dashboard', function () {
         return view('dashboard.umkm');
-    })->name('umkm.dashboard');
+    })->name('dashboard.umkm');
 
     // Dashboard Buyer
     Route::get('/buyer/dashboard', function () {
         return view('dashboard.buyer');
-    })->name('buyer.dashboard');
+    })->name('dashboard.buyer');
 
     // Assessment
     Route::get('/umkm/assessment', [AssessmentWebController::class, 'index'])
@@ -77,7 +78,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/umkm/assessment/result', [AssessmentWebController::class, 'result'])
         ->name('umkm.assessment.result');
 
-    //Katalog
+    // Katalog B2B
     Route::get('/umkm/catalog', [CatalogWebController::class, 'index'])
         ->name('umkm.catalog');
 
@@ -93,6 +94,13 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/umkm/products/{id}', [ProductController::class, 'destroy'])
         ->name('umkm.produk.destroy');
+
+    // Profil UMKM
+    Route::get('/umkm/profile', [ProfileController::class, 'index'])
+        ->name('umkm.profile');
+
+    Route::put('/umkm/profile', [ProfileController::class, 'update'])
+        ->name('umkm.profile.update');
 
     // Market Intelligence
     Route::get('/umkm/market', [MarketWebController::class, 'index'])
