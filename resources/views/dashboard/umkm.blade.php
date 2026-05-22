@@ -323,17 +323,17 @@
 
 @endsection
 
-@push('scripts')
-<script>
-    @auth
+@auth
     @if(session('jwt_token'))
-        localStorage.setItem('token', '{{ session('jwt_token') }}');
-        localStorage.setItem('user', JSON.stringify({
-            name: '{{ Auth::user()->name }}',
-            role: '{{ Auth::user()->role }}',
-            provinsi: '{{ Auth::user()->provinsi ?? '' }}'
-        }));
+        @push('scripts')
+        <script>
+            localStorage.setItem('token', '{{ session("jwt_token") }}');
+            localStorage.setItem('user', JSON.stringify({
+                name: '{{ Auth::user()->name }}',
+                role: '{{ Auth::user()->role }}',
+                provinsi: '{{ Auth::user()->provinsi ?? "" }}'
+            }));
+        </script>
+        @endpush
     @endif
-    @endauth
-</script>
-@endpush
+@endauth
