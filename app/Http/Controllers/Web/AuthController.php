@@ -26,7 +26,7 @@ class AuthController extends Controller
                 'password'   => 'required|min:6|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
             ], [
                 'nama_usaha.required' => 'Nama usaha wajib diisi.',
-                'email.unique'        => 'Email sudah terdaftar.',
+                'email.unique'        => 'Email harus menggunakan @gamil.com',
                 'password.regex'      => 'Password harus mengandung huruf besar, huruf kecil, dan angka.',
             ]);
 
@@ -43,7 +43,7 @@ class AuthController extends Controller
             $token = JWTAuth::fromUser($user);
             session(['jwt_token' => $token]);
 
-            return redirect()->route('umkm.assessment');
+            return redirect()->route('umkm.dashboard');
         }
 
         // =========================
@@ -57,7 +57,7 @@ class AuthController extends Controller
                 'password'       => 'required|min:8|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/',
             ], [
                 'nama_pengusaha.required' => 'Nama pengusaha wajib diisi.',
-                'email.unique'            => 'Email sudah terdaftar.',
+                'email.unique'            => 'Email harus menggunakan @gamil.com',
                 'password.regex'          => 'Password harus mengandung huruf besar, huruf kecil, dan angka.',
             ]);
 
@@ -74,7 +74,7 @@ class AuthController extends Controller
             $token = JWTAuth::fromUser($user);
             session(['jwt_token' => $token]);
 
-            return redirect()->route('dashboard.buyer');
+            return redirect()->route('buyer.dashboard');
         }
 
         // =========================
@@ -109,9 +109,9 @@ class AuthController extends Controller
         session(['jwt_token' => $token]);
 
         if ($user->role === 'umkm') {
-            return redirect()->route('dashboard.umkm');
+            return redirect()->route('umkm.dashboard');
         } elseif ($user->role === 'buyer') {
-            return redirect()->route('dashboard.buyer');
+            return redirect()->route('buyer.dashboard');
         }
 
         return redirect()->route('home');

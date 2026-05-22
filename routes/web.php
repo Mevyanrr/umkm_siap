@@ -6,6 +6,7 @@ use App\Http\Controllers\Web\AssessmentWebController;
 use App\Http\Controllers\Web\CatalogWebController;
 use App\Http\Controllers\Web\ProductController;
 use App\Http\Controllers\Web\ProfileController;
+use App\Http\Controllers\MarketWebController;
 
 // Landing Page
 Route::get('/', function () {
@@ -101,6 +102,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/umkm/profile', [ProfileController::class, 'update'])
         ->name('umkm.profile.update');
 
+    // Market Intelligence
+    Route::get('/umkm/market', [MarketWebController::class, 'index'])
+    ->name('umkm.market');
 });
 
 
