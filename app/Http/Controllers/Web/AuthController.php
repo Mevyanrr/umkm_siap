@@ -43,7 +43,7 @@ class AuthController extends Controller
             $token = JWTAuth::fromUser($user);
             session(['jwt_token' => $token]);
 
-            return redirect()->route('umkm.dashboard');
+            return redirect()->route('dashboard.umkm');
         }
 
         // =========================
@@ -74,7 +74,7 @@ class AuthController extends Controller
             $token = JWTAuth::fromUser($user);
             session(['jwt_token' => $token]);
 
-            return redirect()->route('buyer.dashboard');
+            return redirect()->route('dashboard.buyer');
         }
 
         // =========================
@@ -109,9 +109,9 @@ class AuthController extends Controller
         session(['jwt_token' => $token]);
 
         if ($user->role === 'umkm') {
-            return redirect()->route('umkm.dashboard');
+            return redirect()->route('dashboard.umkm');
         } elseif ($user->role === 'buyer') {
-            return redirect()->route('buyer.dashboard');
+            return redirect()->route('dashboard.buyer');
         }
 
         return redirect()->route('home');
