@@ -5,6 +5,7 @@ use App\Http\Controllers\Web\AuthController as WebAuthController;
 use App\Http\Controllers\Web\AssessmentWebController;
 use App\Http\Controllers\Web\CatalogWebController;
 use App\Http\Controllers\Web\ProductController;
+use App\Http\Controllers\MarketWebController;
 
 // Landing Page
 Route::get('/', function () {
@@ -83,16 +84,19 @@ Route::middleware('auth')->group(function () {
     // Produk Saya
     Route::get('/umkm/products', [ProductController::class, 'index'])
         ->name('umkm.produk_saya');
-    
+
     Route::post('/umkm/products', [ProductController::class, 'store'])
         ->name('umkm.produk.store');
-    
+
     Route::put('/umkm/products/{id}', [ProductController::class, 'update'])
         ->name('umkm.produk.update');
-    
+
     Route::delete('/umkm/products/{id}', [ProductController::class, 'destroy'])
         ->name('umkm.produk.destroy');
 
+    // Market Intelligence
+    Route::get('/umkm/market', [MarketWebController::class, 'index'])
+    ->name('umkm.market');
 });
 
 
