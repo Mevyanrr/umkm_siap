@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 class GeminiService
 {
     private string $apiKey;
-    private string $baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+    private string $baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent';
 
     public function __construct()
     {
@@ -126,8 +126,6 @@ PROMPT;
                     'generationConfig' => [
                         'temperature'     => 0.3,
                         'maxOutputTokens' => $maxTokens,
-                        // PAKSA GEMINI MENGEMBALIKAN JSON MURNI NATIVE
-                        'responseMimeType' => 'application/json',
                     ],
                 ]);
 
@@ -151,6 +149,8 @@ PROMPT;
             }
 
             // Karena sudah pakai responseMimeType, text dijamin JSON murni tanpa ```json
+            $text = preg_replace('/```json\s*/i', '', $text);
+            $text = preg_replace('/```\s*/i', '', $text);
             $decoded = json_decode(trim($text), true);
 
             if (json_last_error() !== JSON_ERROR_NONE) {

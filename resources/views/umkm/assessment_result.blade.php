@@ -6,7 +6,7 @@
 
     body { display: flex; min-height: 100vh; background: #f7f8fa; }
 
-    /* ===== SIDEBAR (same as assessment.blade.php) ===== */
+    /* SIDEBAR */
     .sidebar {
         width: var(--sidebar-w); background: var(--white);
         border-right: 1px solid #e8ecef; display: flex;
@@ -30,13 +30,13 @@
     .sidebar-logout { display: flex; align-items: center; gap: 8px; margin: 8px 12px 0; padding: 10px 14px; border-radius: 10px; font-size: 13px; color: #e54b4b; font-weight: 500; cursor: pointer; transition: background 0.15s; }
     .sidebar-logout:hover { background: #fff0f0; }
 
-    /* ===== MAIN ===== */
+    /* MAIN */
     .main-content { margin-left: var(--sidebar-w); flex: 1; padding: 40px 48px; max-width: 900px; }
     .page-header { margin-bottom: 28px; }
     .page-header h1 { font-size: 26px; font-weight: 800; color: var(--text-black); margin-bottom: 6px; }
     .page-header p  { font-size: 14px; color: var(--text-muted); }
 
-    /* ===== SCORE CARD ===== */
+    /* SCORE */
     .score-card {
         background: white; border-radius: 20px;
         padding: 40px; margin-bottom: 20px;
@@ -75,7 +75,7 @@
     }
     .btn-primary:hover { background: var(--green-darkmore); }
 
-    /* ===== REKOMENDASI ===== */
+    /* REKOMENDASI */
     .reko-card {
         background: var(--green-light); border-radius: 20px;
         padding: 28px 32px; margin-bottom: 20px;
@@ -95,8 +95,7 @@
         font-size: 14px; color: #2a5a4e; line-height: 1.5;
     }
     .reko-arrow { color: var(--green-dark); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
-
-    /* ===== GRID 2 col ===== */
+    
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
 
     .info-card { background: white; border-radius: 18px; padding: 28px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
@@ -126,14 +125,12 @@
     .priority-low    { background: var(--green-light); color: var(--green-dark); }
     .action-text { font-size: 13px; color: var(--text-black); line-height: 1.5; }
 
-    /* Narrative */
     .narrative-card {
         background: white; border-radius: 18px; padding: 28px;
         box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 20px;
     }
     .narrative-text { font-size: 14px; color: #444; line-height: 1.8; }
 
-    /* Loading overlay */
     #loadingOverlay {
         position: fixed; inset: 0; background: rgba(255,255,255,0.9);
         display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -155,7 +152,6 @@
 @endpush
 
 @section('content')
-<!-- Loading Overlay -->
 <div id="loadingOverlay">
     <div class="loading-spinner"></div>
     <div class="loading-text">Memuat hasil analisis AI...</div>
@@ -221,7 +217,7 @@
         <p>Hasil penilaian AI terhadap kesiapan ekspor UMKM Anda.</p>
     </div>
 
-    <!-- Score Card -->
+    <!-- Score -->
     <div class="score-card">
         <div class="score-ring-wrap">
             <div class="score-ring">
@@ -252,13 +248,11 @@
         <ul class="reko-list" id="rekoList"></ul>
     </div>
 
-    <!-- Narasi AI -->
     <div class="narrative-card" id="narrativeCard" style="display:none">
         <div class="info-card-title"><div class="dot"></div> Analisis AI</div>
         <p class="narrative-text" id="narrativeText"></p>
     </div>
 
-    <!-- Grid: Kekuatan & Risiko -->
     <div class="grid-2">
         <div class="info-card" id="strengthCard" style="display:none">
             <div class="info-card-title"><div class="dot" style="background:#27ae60"></div> Kekuatan Anda</div>
@@ -270,7 +264,6 @@
         </div>
     </div>
 
-    <!-- Priority Actions -->
     <div class="info-card" id="actionsCard" style="display:none">
         <div class="info-card-title"><div class="dot"></div> Langkah Prioritas</div>
         <div class="action-list" id="actionList"></div>
@@ -313,7 +306,7 @@ function renderResult(result) {
     document.getElementById('scoreLevel').textContent  = result.level;
     document.getElementById('scoreDesc').textContent   = getLevelDesc(result.level, result.score);
 
-    // Priority actions as rekomendasi (top 3 high)
+    // Rekomendasi
     const highActions = (result.priority_actions || [])
         .filter(a => a.priority === 'high').slice(0, 4);
     if (highActions.length) {
@@ -322,27 +315,23 @@ function renderResult(result) {
             .map(a => `<li><span class="reko-arrow">→</span> ${a.task}</li>`).join('');
     }
 
-    // Narrative
     if (result.narrative) {
         document.getElementById('narrativeCard').style.display = 'block';
         document.getElementById('narrativeText').textContent = result.narrative;
     }
 
-    // Strengths
     if (result.strengths?.length) {
         document.getElementById('strengthCard').style.display = 'block';
         document.getElementById('strengthList').innerHTML = result.strengths
             .map(s => `<span class="tag tag-green">${s}</span>`).join('');
     }
 
-    // Risks
     if (result.risk_factors?.length) {
         document.getElementById('riskCard').style.display = 'block';
         document.getElementById('riskList').innerHTML = result.risk_factors
             .map(r => `<span class="tag tag-red">${r}</span>`).join('');
     }
 
-    // All priority actions
     if (result.priority_actions?.length) {
         document.getElementById('actionsCard').style.display = 'block';
         document.getElementById('actionList').innerHTML = result.priority_actions
@@ -352,7 +341,6 @@ function renderResult(result) {
             </div>`).join('');
     }
 
-    // Certifications
     if (result.recommended_certifications?.length) {
         document.getElementById('certCard').style.display = 'block';
         document.getElementById('certList').innerHTML = result.recommended_certifications
@@ -363,7 +351,6 @@ function renderResult(result) {
     document.getElementById('mainContent').style.display    = 'block';
 }
 
-// Load from localStorage (set by assessment page after submit)
 window.addEventListener('DOMContentLoaded', () => {
     const raw = localStorage.getItem('assessment_result');
     if (raw) {

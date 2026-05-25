@@ -12,7 +12,7 @@
         background: #f7f8fa;
     }
 
-    /* ===== SIDEBAR ===== */
+    /* SIDEBAR */
     .sidebar {
         width: var(--sidebar-w);
         background: var(--white);
@@ -81,7 +81,7 @@
     }
     .sidebar-logout:hover { background: #fff0f0; }
 
-    /* ===== MAIN ===== */
+    /* MAIN */
     .main-content {
         margin-left: var(--sidebar-w);
         flex: 1;
@@ -93,7 +93,7 @@
     .page-header h1 { font-size: 26px; font-weight: 800; color: var(--text-black); margin-bottom: 6px; }
     .page-header p  { font-size: 14px; color: var(--text-muted); }
 
-    /* ===== PROGRESS BAR ===== */
+    /* PROGRESS */
     .progress-bar-wrap {
         background: white; border-radius: 16px;
         padding: 20px 24px; margin-bottom: 28px;
@@ -109,7 +109,7 @@
     }
     .progress-label { font-size: 13px; font-weight: 600; color: var(--green-dark); white-space: nowrap; }
 
-    /* ===== QUESTION CARD ===== */
+    /* QUESTION */
     .question-card {
         background: white; border-radius: 18px;
         padding: 32px; margin-bottom: 16px;
@@ -127,7 +127,6 @@
         font-size: 17px; font-weight: 700; color: var(--text-black); margin-bottom: 20px;
     }
 
-    /* Boolean options */
     .options-bool { display: flex; gap: 12px; }
     .opt-btn {
         flex: 1; padding: 14px 20px;
@@ -143,7 +142,6 @@
         color: var(--green-dark);
     }
 
-    /* Select options */
     .options-select { display: flex; flex-direction: column; gap: 10px; }
     .opt-select {
         padding: 13px 18px; border-radius: 12px;
@@ -167,7 +165,6 @@
         background: white; border-radius: 50%;
     }
 
-    /* Text input */
     .q-input {
         width: 100%; padding: 13px 16px;
         border: 2px solid #dde1e7; border-radius: 12px;
@@ -176,7 +173,6 @@
     }
     .q-input:focus { border-color: var(--green-dark); }
 
-    /* Number input */
     .number-wrap { position: relative; }
     .number-wrap .q-input { padding-right: 80px; }
     .number-suffix {
@@ -184,7 +180,6 @@
         font-size: 13px; color: #aab0bb; font-weight: 500;
     }
 
-    /* Scale */
     .scale-wrap { display: flex; gap: 10px; }
     .scale-btn {
         flex: 1; padding: 12px 8px;
@@ -198,7 +193,6 @@
     .scale-labels { display: flex; justify-content: space-between; margin-top: 6px; }
     .scale-labels span { font-size: 11px; color: #aab0bb; }
 
-    /* Category header */
     .category-header {
         font-size: 13px; font-weight: 700; color: var(--green-dark);
         letter-spacing: 0.5px; margin: 28px 0 12px;
@@ -209,7 +203,6 @@
         content: ''; flex: 1; height: 1px; background: var(--green-light);
     }
 
-    /* ===== CTA BUTTON ===== */
     .cta-wrap { margin-top: 32px; display: flex; justify-content: flex-end; }
     .btn-primary {
         padding: 15px 36px; border-radius: 14px;
@@ -222,7 +215,6 @@
     .btn-primary:active { transform: scale(0.98); }
     .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* Loading spinner */
     .spinner {
         width: 18px; height: 18px; border: 3px solid rgba(255,255,255,0.3);
         border-top-color: white; border-radius: 50%;
@@ -329,7 +321,6 @@ if (!TOKEN) window.location.href = '/login/umkm';
 let questions = [];
 let answers   = {};
 
-// Sidebar user info
 const user = JSON.parse(localStorage.getItem('user') || '{}');
 if (user.name) {
     document.getElementById('sidebarName').textContent    = user.name;
@@ -453,7 +444,6 @@ function setAnswerText(id, value) {
     updateProgress();
 }
 
-// Fix: text/number need different handler
 document.addEventListener('input', function(e) {
     if (e.target.classList.contains('q-input')) {
         const card = e.target.closest('.question-card');
@@ -503,7 +493,6 @@ async function submitAssessment() {
         if (!res.ok) throw new Error('Gagal submit');
         const result = await res.json();
 
-        // Simpan ke localStorage untuk halaman hasil
         localStorage.setItem('assessment_result', JSON.stringify(result));
         window.location.href = '/umkm/assessment/result';
 

@@ -7,65 +7,42 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
-class ProfileController extends Controller
+class BuyerProfileController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
-
-        $view = $user->role === 'buyer'
-            ? 'buyer.profile_buyer'
-            : 'umkm.profile_umkm';
-
-        return view($view, compact('user'));
+        return view('buyer.profile_buyer', ['user' => Auth::user()]);
     }
 
     public function update(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = \App\Models\User::find(Auth::id());
 
         if (!$user) {
             return redirect()->back()->with('error', 'User tidak ditemukan.');
         }
 
-        $rules = [
+        $request->validate([
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:6|confirmed',
-        ];
-
-        $messages = [
+        ], [
             'name.required'      => 'Nama wajib diisi.',
             'email.unique'       => 'Email sudah digunakan.',
             'password.min'       => 'Password minimal 6 karakter.',
             'password.confirmed' => 'Konfirmasi password tidak cocok.',
-        ];
-
-        if ($user->role === 'umkm') {
-            $rules['phone']    = 'nullable|string|max:20';
-            $rules['provinsi'] = 'nullable|string|max:100';
-        }
-
-        $request->validate($rules, $messages);
+        ]);
 
         $user->name  = $request->name;
         $user->email = $request->email;
-
-        if ($user->role === 'umkm') {
-            $user->phone    = $request->phone;
-            $user->provinsi = $request->provinsi;
-        }
 
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
 
-    $user->save();
+        $user->save();
 
-     $route = $user->role === 'buyer'
-            ? 'buyer.profile'
-            : 'umkm.profile';
-
-    return redirect()->route('umkm.profile')->with('success', 'Profile berhasil diperbarui!');
-}
+        return redirect()->route('buyer.profile')->with('success', 'Profil berhasil diperbarui!');
+    }
 }
