@@ -121,7 +121,3 @@ Route::post('/logout', [WebAuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
 
-// Toggle wishlist (AJAX)
-Route::post('/wishlist/toggle', [WhistlistController::class, 'toggle'])
-    ->middleware('auth')
-    ->name('wishlist.toggle');

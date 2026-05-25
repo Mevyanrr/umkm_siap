@@ -46,7 +46,7 @@ class ProfileController extends Controller
         $user->password = Hash::make($request->password);
     }
 
-    $user->save(); // <--- DIJAMIN AMAN DAN LEGAL
+    $user->save(); 
 
     return redirect()->route('umkm.profile')->with('success', 'Profile berhasil diperbarui!');
 }

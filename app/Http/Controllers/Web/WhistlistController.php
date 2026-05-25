@@ -38,7 +38,6 @@ class WhistlistController extends Controller
                 'message' => 'Produk dihapus dari wishlist.'
             ]);
         } else {
-            // Jauh lebih aman menggunakan baris baru manual untuk menghindari proteksiyon Mass Assignment $fillable
             $newWishlist = new Wishlist();
             $newWishlist->user_id = $userId;
             $newWishlist->product_id = $productId;
@@ -68,7 +67,6 @@ class WhistlistController extends Controller
 
     $totalFavorit = $savedProducts->count();
 
-    // PERBAIKAN BARIS 74: Ubah 'buyer.saved' menjadi 'buyer.save'
     return view('buyer.save', compact('savedProducts', 'totalFavorit'));
 }
 }
