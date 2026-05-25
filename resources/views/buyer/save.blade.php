@@ -226,7 +226,7 @@
 
     <span class="sidebar-section-label">Akun</span>
     <nav class="sidebar-nav">
-        <a href="#" class="nav-item">
+        <a href="{{ route('buyer.profile') }}" class="nav-item">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>

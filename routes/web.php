@@ -9,6 +9,7 @@ use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\MarketWebController;
 use App\Http\Controllers\Web\BuyerController;
 use App\Http\Controllers\Web\WhistlistController;
+use App\Http\Controllers\Web\BuyerProfileController;
 
 // Landing Page
 Route::get('/', function () {
@@ -73,8 +74,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/buyer/dashboard', [BuyerController::class, 'dashboard'])
         ->name('dashboard.buyer');
 
-Route::post('/wishlist/toggle', [WhistlistController::class, 'toggle'])->name('wishlist.toggle');
-Route::get('/buyer/saved', [WhistlistController::class, 'savedProducts'])->name('buyer.saved');
+    Route::post('/wishlist/toggle', [WhistlistController::class, 'toggle'])->name('wishlist.toggle');
+    Route::get('/buyer/saved', [WhistlistController::class, 'savedProducts'])->name('buyer.saved');
+
+    // Toggle wishlist (AJAX)
+    Route::post('/wishlist/toggle', [WhistlistController::class, 'toggle'])
+        ->middleware('auth')
+        ->name('wishlist.toggle');
+
+    // Buyer Profile
+    Route::get('/buyer/profile', [BuyerProfileController::class, 'index'])
+        ->name('buyer.profile');
+
+    Route::put('/buyer/profile', [BuyerProfileController::class, 'update'])
+        ->name('buyer.profile.update');
 
     // Assessment
     Route::get('/umkm/assessment', [AssessmentWebController::class, 'index'])
@@ -114,14 +127,9 @@ Route::get('/buyer/saved', [WhistlistController::class, 'savedProducts'])->name(
 
 
 // ======================
-// LOGOUT & AJAX (SUDAH DIPERBERSIH)
+// LOGOUT & AJAX
 // ======================
 
 Route::post('/logout', [WebAuthController::class, 'logout'])
     ->middleware('auth')
     ->name('logout');
-
-// Toggle wishlist (AJAX)
-Route::post('/wishlist/toggle', [WhistlistController::class, 'toggle'])
-    ->middleware('auth')
-    ->name('wishlist.toggle');
