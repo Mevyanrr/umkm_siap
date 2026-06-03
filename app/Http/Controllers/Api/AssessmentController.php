@@ -85,12 +85,14 @@ class AssessmentController extends Controller
         $score = $this->calculateScore($answers);
         $level = $this->getReadinessLevel($score);
 
-        $assessmentResult = $this->geminiService->predictExportReadiness(
-            answers:         $answers,
-            productCategory: $productCategory,
-            targetCountry:   'Global',
-            score:           $score
-        );
+        $assessmentResult = app()->isLocal()
+            ? $this->getDummyExportReadiness($score)
+            : $this->geminiService->predictExportReadiness(
+                answers:         $answers,
+                productCategory: $productCategory,
+                targetCountry:   'Global',
+                score:           $score
+            );
 
         $result = [
             'score'                      => $score,
@@ -108,6 +110,61 @@ class AssessmentController extends Controller
 
         return response()->json($result);
     }
+
+    private function getDummyExportReadiness(int $score): array
+    {
+        $isHigh = $score >= 70;
+
+        return [
+            'export_probability'         => $isHigh ? 0.80 : 0.55,
+            'estimated_readiness_months' => $isHigh ? 1 : 4,
+            'strengths'                  => $isHigh
+                ? [
+                    'Sudah memiliki NIB, NPWP, dan dokumen legal lengkap',
+                    'Kapasitas produksi memadai dan bisa memenuhi MOQ 500+ unit',
+                    'Pernah melakukan ekspor sebelumnya',
+                    'SOP produksi sudah terdokumentasi dengan baik',
+                ]
+                : [
+                    'Sudah memiliki NIB dan NPWP aktif',
+                    'Kapasitas produksi cukup untuk memulai ekspor skala kecil',
+                ],
+            'risk_factors'               => $isHigh
+                ? [
+                    'Belum memiliki buyer tetap di negara tujuan',
+                    'Perlu peningkatan sertifikasi untuk pasar premium',
+                ]
+                : [
+                    'Belum memiliki sertifikat SNI',
+                    'Kurang familiar dengan prosedur kepabeanan',
+                    'Belum ada buyer potensial di negara tujuan',
+                    'SOP produksi perlu diperkuat',
+                ],
+            'narrative'                  => $isHigh
+                ? 'UMKM Anda berada dalam posisi yang sangat baik untuk memulai ekspor dalam waktu dekat. '
+                    . 'Kelengkapan dokumen legal dan pengalaman ekspor sebelumnya menjadi keunggulan kompetitif yang signifikan. '
+                    . 'Fokus selanjutnya adalah memperkuat jaringan buyer internasional dan meningkatkan sertifikasi produk.'
+                : 'UMKM Anda menunjukkan fondasi yang cukup kuat untuk memulai persiapan ekspor. '
+                    . 'Namun, masih diperlukan beberapa langkah penting terutama di bidang sertifikasi produk '
+                    . 'dan pemahaman prosedur ekspor agar bisa bersaing di pasar internasional.',
+            'recommended_certifications' => [
+                'SNI (Standar Nasional Indonesia)',
+                'Sertifikat Halal MUI',
+                'ISO 9001:2015 – Manajemen Mutu',
+            ],
+            'priority_actions'           => [
+                ['priority' => 'high',   'task' => 'Urus sertifikasi SNI untuk produk utama Anda di BSN'],
+                ['priority' => 'high',   'task' => 'Ikuti pelatihan prosedur ekspor di LPEI atau Dinas Perdagangan setempat'],
+                ['priority' => 'medium', 'task' => 'Daftarkan produk di platform B2B internasional (Alibaba, Global Sources, TradeKey)'],
+                ['priority' => 'medium', 'task' => 'Buat katalog produk bilingual (Indonesia-Inggris) dengan spesifikasi teknis'],
+                ['priority' => 'low',    'task' => 'Pertimbangkan sertifikasi Halal untuk membuka pasar Timur Tengah dan Malaysia'],
+            ],
+        ];
+    }
+
+    // ------------------------------------------------------------------
+    // Private helpers
+    // ------------------------------------------------------------------
 
     private function getReadinessLevel(int $score): string
     {

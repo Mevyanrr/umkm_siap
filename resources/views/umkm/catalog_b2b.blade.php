@@ -37,7 +37,7 @@
         min-height: 100vh;
     }
 
-/* ===== SIDEBAR (same as assessment.blade.php) ===== */
+/* SIDEBAR */
     .sidebar {
         width: var(--sidebar-w); background: var(--white);
         border-right: 1px solid #e8ecef; display: flex;
@@ -61,9 +61,7 @@
     .sidebar-logout { display: flex; align-items: center; gap: 8px; margin: 8px 12px 0; padding: 10px 14px; border-radius: 10px; font-size: 13px; color: #e54b4b; font-weight: 500; cursor: pointer; transition: background 0.15s; }
     .sidebar-logout:hover { background: #fff0f0; }
 
-    /* ===================================================
-       MAIN CONTENT
-    =================================================== */
+    /* MAIN */
     .main-content {
         margin-left: var(--sidebar-w);
         flex: 1;
@@ -89,9 +87,7 @@
         margin-top: 4px;
     }
 
-    /* ===================================================
-       SEARCH
-    =================================================== */
+    /* SEARCH */
     .toolbar {
         display: flex;
         align-items: center;
@@ -143,9 +139,7 @@
         font-weight: 500;
     }
 
-    /* ===================================================
-       PRODUCT GRID
-    =================================================== */
+    /* PRODUCT GRID */
     .catalog-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -294,9 +288,7 @@
 
     .card-contact-btn:hover { background: var(--green); }
 
-    /* ===================================================
-       EMPTY STATE
-    =================================================== */
+    /* EMPTY STATE */
     .empty-state {
         grid-column: 1 / -1;
         text-align: center;
@@ -308,9 +300,7 @@
     .empty-state-title { font-size: 18px; font-weight: 700; color: var(--gray-500); margin-bottom: 8px; }
     .empty-state-desc  { font-size: 14px; max-width: 360px; margin: 0 auto; line-height: 1.6; }
 
-    /* ===================================================
-       MODAL — Product Detail
-    =================================================== */
+    /* MODAL — Product Detail */
     .modal-overlay {
         display: none;
         position: fixed;
@@ -571,18 +561,14 @@
 
     .btn-close-modal:hover { background: var(--gray-200); }
 
-    /* ===================================================
-       PAGINATION
-    =================================================== */
+    /* PAGINATION */
     .pagination-wrap {
         margin-top: 36px;
         display: flex;
         justify-content: center;
     }
 
-    /* ===================================================
-       RESPONSIVE
-    =================================================== */
+    /* RESPONSIVE */
     @media (max-width: 900px) {
         .sidebar { width: 200px; }
         :root { --sidebar-w: 200px; }
@@ -653,16 +639,13 @@
     </a>
 </div>
 
-{{-- ===== MAIN ===== --}}
 <div class="main-content">
 
-    {{-- Header --}}
     <div class="page-header">
         <h1 class="page-title">Katalog Produk B2B</h1>
         <p class="page-subtitle">Browse produk UMKM Indonesia yang siap ekspor.</p>
     </div>
 
-    {{-- Search --}}
     <div class="toolbar">
         <div class="search-wrap">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -679,7 +662,6 @@
         </div>
     </div>
 
-    {{-- Grid --}}
     <div class="catalog-grid" id="catalogGrid">
 
         @forelse($products as $product)
@@ -734,7 +716,6 @@
                     @endif
                 </div>
 
-                {{-- Body --}}
                 <div class="card-body">
                     <div class="card-name">{{ $product->name }}</div>
                     <div class="card-seller">{{ $product->seller->name ?? '—' }}</div>
@@ -745,7 +726,6 @@
                     </div>
                 </div>
 
-                {{-- Footer --}}
                 <div class="card-footer">
                     <span class="card-category-chip">
                         {{ ucfirst($product->category) }}
@@ -773,7 +753,6 @@
 
     </div>
 
-    {{-- Pagination --}}
     @if($products->hasPages())
         <div class="pagination-wrap">
             {{ $products->links() }}
@@ -781,7 +760,6 @@
     @endif
 </div>
 
-{{-- ===== MODAL ===== --}}
 <div class="modal-overlay" id="productModal" onclick="closeModal(event)">
     <div class="modal" id="modalContent">
         {{-- JS-populated --}}
@@ -902,7 +880,7 @@
         }
     });
 
-    // Search with debounce
+    //Search
     let debounceTimer;
     document.getElementById('searchInput').addEventListener('input', function() {
         clearTimeout(debounceTimer);
