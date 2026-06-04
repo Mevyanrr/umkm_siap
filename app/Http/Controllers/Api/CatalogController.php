@@ -82,7 +82,7 @@ class CatalogController extends Controller
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('products/' . auth('api')->id(), 'public');
-                $imageUrls[] = Storage::url($path);
+                $imageUrls[] = asset('storage/' . $path);
             }
         }
 
