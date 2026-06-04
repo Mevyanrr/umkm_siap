@@ -23,12 +23,12 @@ class ProductController extends Controller
     {
         $request->validate([
             'name'                => 'required|string|max:255',
-            'category'            => 'nullable|string|max:50',
+            'category'            => 'nullable|string|max:100',
             'description'         => 'nullable|string|max:2000',
-            'production_capacity' => 'nullable|string|max:50',
+            'production_capacity' => 'nullable|string|max:100',
             'target_countries'    => 'nullable|string|max:255',
             'certifications'      => 'nullable|string|max:255',
-            'images'              => 'nullable|image|mimes:jpeg,png,webp|max:2048',
+            'images'              => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120',
         ]);
 
         $imageUrl = null;
@@ -61,12 +61,12 @@ class ProductController extends Controller
 
         $request->validate([
             'name'                => 'required|string|max:255',
-            'category'            => 'nullable|string|max:50',
+            'category'            => 'nullable|string|max:100',
             'description'         => 'nullable|string|max:2000',
-            'production_capacity' => 'nullable|string|max:50',
+            'production_capacity' => 'nullable|string|max:100',
             'target_countries'    => 'nullable|string|max:255',
             'certifications'      => 'nullable|string|max:255',
-            'images'              => 'nullable|image|mimes:jpeg,png,webp|max:2048',
+            'images'              => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120',
         ]);
 
         $imageUrl = $product->images[0] ?? null;

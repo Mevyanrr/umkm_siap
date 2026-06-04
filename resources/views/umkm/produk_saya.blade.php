@@ -13,7 +13,6 @@
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
-    /* ===== SIDEBAR ===== */
     .sidebar {
         width: var(--sidebar-w);
         background: #fff;
@@ -85,14 +84,12 @@
     }
     .sidebar-logout:hover { background: #fff0f0; }
 
-    /* ===== MAIN ===== */
     .main-content {
         margin-left: var(--sidebar-w);
         flex: 1;
         padding: 40px 48px;
     }
 
-    /* ===== HEADER ===== */
     .page-header {
         display: flex;
         justify-content: space-between;
@@ -103,92 +100,60 @@
     .page-header p  { font-size: 14px; color: #7FA09A; }
 
     .btn-upload {
-        background: #0B6E5E;
-        color: white;
-        font-size: 14px;
-        font-weight: 700;
-        padding: 11px 24px;
-        border-radius: 10px;
-        border: none;
-        cursor: pointer;
-        transition: opacity 0.15s;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        white-space: nowrap;
+        background: #0B6E5E; color: white;
+        font-size: 14px; font-weight: 700;
+        padding: 11px 24px; border-radius: 10px; border: none;
+        cursor: pointer; transition: opacity 0.15s;
+        font-family: 'Plus Jakarta Sans', sans-serif; white-space: nowrap;
     }
     .btn-upload:hover { opacity: 0.88; }
 
-    /* ===== ALERT ===== */
     .alert-success {
-        background: #E6F5F2;
-        color: #0B6E5E;
-        border: 1px solid #B2DDD5;
-        border-radius: 10px;
-        padding: 12px 18px;
-        margin-bottom: 20px;
-        font-size: 13px;
-        font-weight: 600;
+        background: #E6F5F2; color: #0B6E5E;
+        border: 1px solid #B2DDD5; border-radius: 10px;
+        padding: 12px 18px; margin-bottom: 20px;
+        font-size: 13px; font-weight: 600;
     }
+    .alert-error {
+        background: #fff0f0; color: #e54b4b;
+        border: 1px solid #f5b8b8; border-radius: 10px;
+        padding: 12px 18px; margin-bottom: 20px;
+        font-size: 13px; font-weight: 600;
+    }
+    .alert-error ul { margin: 6px 0 0 16px; font-weight: 400; }
 
-    /* ===== EMPTY STATE ===== */
     .empty-state {
-        background: white;
-        border-radius: 14px;
-        border: 1px solid #D8E5E2;
-        padding: 60px 40px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
+        background: white; border-radius: 14px;
+        border: 1px solid #D8E5E2; padding: 60px 40px;
+        display: flex; flex-direction: column;
+        align-items: center; text-align: center;
     }
     .empty-title { color: #1A3530; font-size: 16px; font-weight: bold; margin-bottom: 8px; }
     .empty-sub   { color: #7FA09A; font-size: 13px; margin-bottom: 24px; max-width: 340px; line-height: 1.6; }
 
-    /* ===== PRODUK LIST CARD ===== */
     .products-card {
-        background: white;
-        border-radius: 14px;
-        border: 1px solid #D8E5E2;
-        padding: 20px 22px;
-        margin-bottom: 24px;
+        background: white; border-radius: 14px;
+        border: 1px solid #D8E5E2; padding: 20px 22px; margin-bottom: 24px;
     }
-    .products-card-title {
-        color: #1A3530;
-        font-size: 15px;
-        font-weight: bold;
-        margin-bottom: 20px;
-    }
+    .products-card-title { color: #1A3530; font-size: 15px; font-weight: bold; margin-bottom: 20px; }
 
     .product-item {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        padding: 14px 0;
-        border-bottom: 1px solid #F0F4F3;
+        display: flex; align-items: center; gap: 16px;
+        padding: 14px 0; border-bottom: 1px solid #F0F4F3;
     }
     .product-item:last-child { border-bottom: none; padding-bottom: 0; }
     .product-item:first-child { padding-top: 0; }
 
-    /* ===== PRODUCT THUMBNAIL ===== */
     .product-thumb {
-        width: 52px;
-        height: 52px;
-        border-radius: 10px;
-        object-fit: cover;
-        border: 1px solid #E8F0EE;
-        flex-shrink: 0;
-        background: #F0F4F3;
+        width: 52px; height: 52px; border-radius: 10px;
+        object-fit: cover; border: 1px solid #E8F0EE;
+        flex-shrink: 0; background: #F0F4F3;
     }
     .product-thumb-placeholder {
-        width: 52px;
-        height: 52px;
-        border-radius: 10px;
-        background: #F0F4F3;
-        border: 1px solid #E8F0EE;
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #B2CCC8;
+        width: 52px; height: 52px; border-radius: 10px;
+        background: #F0F4F3; border: 1px solid #E8F0EE;
+        flex-shrink: 0; display: flex; align-items: center;
+        justify-content: center; color: #B2CCC8;
     }
 
     .product-info { flex: 1; min-width: 0; }
@@ -198,169 +163,81 @@
     .product-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
     .btn-edit {
-        background: none;
-        border: 1px solid #D8E5E2;
-        border-radius: 10px;
-        padding: 8px 16px;
-        font-size: 12px;
-        font-weight: 600;
-        color: #3D6B63;
-        cursor: pointer;
-        transition: background 0.15s;
+        background: none; border: 1px solid #D8E5E2; border-radius: 10px;
+        padding: 8px 16px; font-size: 12px; font-weight: 600; color: #3D6B63;
+        cursor: pointer; transition: background 0.15s;
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
     .btn-edit:hover { background: #F0FAF7; }
 
     .btn-hapus {
-        background: none;
-        border: 1px solid #D8E5E2;
-        border-radius: 10px;
-        padding: 8px 16px;
-        font-size: 12px;
-        font-weight: 600;
-        color: #3D6B63;
-        cursor: pointer;
-        transition: background 0.15s;
+        background: none; border: 1px solid #D8E5E2; border-radius: 10px;
+        padding: 8px 16px; font-size: 12px; font-weight: 600; color: #3D6B63;
+        cursor: pointer; transition: background 0.15s;
         font-family: 'Plus Jakarta Sans', sans-serif;
     }
     .btn-hapus:hover { background: #FFF0F0; color: #e54b4b; border-color: #e54b4b; }
 
-    /* ===== MODAL ===== */
     .modal-overlay {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.4);
-        z-index: 200;
-        align-items: center;
-        justify-content: center;
+        display: none; position: fixed; inset: 0;
+        background: rgba(0,0,0,0.4); z-index: 200;
+        align-items: center; justify-content: center;
     }
     .modal-overlay.open { display: flex; }
 
     .modal {
-        background: white;
-        border-radius: 18px;
-        padding: 32px;
-        width: 100%;
-        max-width: 480px;
-        max-height: 90vh;
-        overflow-y: auto;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        background: white; border-radius: 18px; padding: 32px;
+        width: 100%; max-width: 480px; max-height: 90vh;
+        overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
     }
 
     .modal-title { color: #1A3530; font-size: 18px; font-weight: bold; margin-bottom: 24px; }
 
     .form-group { margin-bottom: 16px; }
-    .form-label {
-        display: block;
-        color: #1A3530;
-        font-size: 13px;
-        font-weight: 600;
-        margin-bottom: 6px;
-    }
-    .form-hint { color: #7FA09A; font-size: 11px; margin-top: 4px; }
+    .form-label { display: block; color: #1A3530; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    .form-hint  { color: #7FA09A; font-size: 11px; margin-top: 4px; }
 
     .form-input {
-        width: 100%;
-        border: 1px solid #D8E5E2;
-        border-radius: 10px;
-        padding: 10px 14px;
-        font-size: 13px;
+        width: 100%; border: 1px solid #D8E5E2; border-radius: 10px;
+        padding: 10px 14px; font-size: 13px;
         font-family: 'Plus Jakarta Sans', sans-serif;
-        color: #1A3530;
-        outline: none;
-        transition: border 0.15s;
-        background: #fff;
+        color: #1A3530; outline: none; transition: border 0.15s; background: #fff;
     }
     .form-input:focus { border-color: #0B6E5E; }
     textarea.form-input { resize: vertical; min-height: 80px; }
 
-    .modal-actions {
-        display: flex;
-        gap: 12px;
-        margin-top: 24px;
-        justify-content: flex-end;
-    }
+    .modal-actions { display: flex; gap: 12px; margin-top: 24px; justify-content: flex-end; }
     .btn-cancel {
-        background: none;
-        border: 1px solid #D8E5E2;
-        border-radius: 10px;
-        padding: 10px 20px;
-        font-size: 13px;
-        font-weight: 600;
-        color: #7FA09A;
-        cursor: pointer;
-        font-family: 'Plus Jakarta Sans', sans-serif;
+        background: none; border: 1px solid #D8E5E2; border-radius: 10px;
+        padding: 10px 20px; font-size: 13px; font-weight: 600; color: #7FA09A;
+        cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
     }
     .btn-cancel:hover { background: #F7FAF9; }
     .btn-submit {
-        background: #0B6E5E;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        padding: 10px 24px;
-        font-size: 13px;
-        font-weight: 700;
-        cursor: pointer;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        transition: opacity 0.15s;
+        background: #0B6E5E; color: white; border: none; border-radius: 10px;
+        padding: 10px 24px; font-size: 13px; font-weight: 700;
+        cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; transition: opacity 0.15s;
     }
     .btn-submit:hover { opacity: 0.88; }
 
-    /* ===== MODAL KONFIRMASI HAPUS ===== */
-    .modal-confirm {
-        max-width: 380px;
-        text-align: center;
-        padding: 36px 32px;
-    }
+    .modal-confirm { max-width: 380px; text-align: center; padding: 36px 32px; }
     .confirm-icon {
-        width: 56px; height: 56px;
-        background: #FFF0F0;
-        border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        margin: 0 auto 16px;
+        width: 56px; height: 56px; background: #FFF0F0; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;
     }
-    .confirm-title {
-        color: #1A3530;
-        font-size: 17px;
-        font-weight: 700;
-        margin-bottom: 8px;
-    }
-    .confirm-sub {
-        color: #7FA09A;
-        font-size: 13px;
-        line-height: 1.6;
-        margin-bottom: 24px;
-    }
-    .confirm-actions {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-    }
+    .confirm-title { color: #1A3530; font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+    .confirm-sub   { color: #7FA09A; font-size: 13px; line-height: 1.6; margin-bottom: 24px; }
+    .confirm-actions { display: flex; gap: 10px; justify-content: center; }
     .btn-confirm-cancel {
-        background: none;
-        border: 1px solid #D8E5E2;
-        border-radius: 10px;
-        padding: 10px 24px;
-        font-size: 13px;
-        font-weight: 600;
-        color: #7FA09A;
-        cursor: pointer;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        transition: background 0.15s;
+        background: none; border: 1px solid #D8E5E2; border-radius: 10px;
+        padding: 10px 24px; font-size: 13px; font-weight: 600; color: #7FA09A;
+        cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; transition: background 0.15s;
     }
     .btn-confirm-cancel:hover { background: #F7FAF9; }
     .btn-confirm-delete {
-        background: #e54b4b;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        padding: 10px 24px;
-        font-size: 13px;
-        font-weight: 700;
-        cursor: pointer;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        transition: opacity 0.15s;
+        background: #e54b4b; color: white; border: none; border-radius: 10px;
+        padding: 10px 24px; font-size: 13px; font-weight: 700;
+        cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; transition: opacity 0.15s;
     }
     .btn-confirm-delete:hover { opacity: 0.88; }
 </style>
@@ -417,18 +294,10 @@
 
     @auth
     <a href="{{ route('umkm.profile') }}" class="sidebar-user" style="text-decoration:none;">
-        <div class="user-avatar">
-            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-        </div>
+        <div class="user-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
         <div class="user-info">
             <div class="user-name">{{ Auth::user()->name }}</div>
-            <div class="user-sub">
-                @if(Auth::user()->provinsi)
-                    UMKM · {{ Auth::user()->provinsi }}
-                @else
-                    UMKM
-                @endif
-            </div>
+            <div class="user-sub">UMKM</div>
         </div>
     </a>
     @endauth
@@ -457,6 +326,24 @@
         <div class="alert-success">{{ session('success') }}</div>
     @endif
 
+    {{-- Tampilkan error validasi --}}
+    @if($errors->any())
+        <div class="alert-error">
+            <b>Gagal upload:</b>
+            <ul>
+                @foreach($errors->all() as $e)
+                    <li>{{ $e }}</li>
+                @endforeach
+            </ul>
+        </div>
+        <script>
+            // Buka modal upload otomatis kalau ada error
+            document.addEventListener('DOMContentLoaded', function() {
+                openModal('modal-upload');
+            });
+        </script>
+    @endif
+
     @if($products->isEmpty())
         <div class="empty-state">
             <div class="empty-title">Belum ada produk</div>
@@ -469,8 +356,6 @@
 
             @foreach($products as $product)
             <div class="product-item">
-
-                {{-- THUMBNAIL --}}
                 @if(!empty($product->images) && isset($product->images[0]))
                     <img src="{{ $product->images[0] }}" alt="{{ $product->name }}" class="product-thumb">
                 @else
@@ -497,7 +382,6 @@
                         '{{ implode(', ', $product->target_countries ?? []) }}',
                         '{{ implode(', ', $product->certifications ?? []) }}'
                     )">Edit</button>
-
                     <button class="btn-hapus" onclick="openDeleteModal('{{ $product->id }}', '{{ addslashes($product->name) }}')">Hapus</button>
                 </div>
             </div>
@@ -516,17 +400,17 @@
 
             <div class="form-group">
                 <label class="form-label">Nama Produk <span style="color:#e54b4b">*</span></label>
-                <input type="text" name="name" class="form-input" placeholder="Contoh: Kopi Arabika Gayo" required>
+                <input type="text" name="name" class="form-input" placeholder="Contoh: Kopi Arabika Gayo" value="{{ old('name') }}" required>
             </div>
 
             <div class="form-group">
                 <label class="form-label">Kategori</label>
-                <input type="text" name="category" class="form-input" placeholder="Contoh: Makanan & Minuman">
+                <input type="text" name="category" class="form-input" placeholder="Contoh: Makanan & Minuman" value="{{ old('category') }}">
             </div>
 
             <div class="form-group">
                 <label class="form-label">Deskripsi</label>
-                <textarea name="description" class="form-input" placeholder="Deskripsi singkat produk..."></textarea>
+                <textarea name="description" class="form-input" placeholder="Deskripsi singkat produk...">{{ old('description') }}</textarea>
             </div>
 
             <div class="form-group">
@@ -549,24 +433,26 @@
                     </select>
                     <span style="color:#7FA09A; font-size:13px; white-space:nowrap;">/ bulan</span>
                 </div>
-                <input type="hidden" name="production_capacity" id="production_capacity_hidden">
+                <input type="hidden" name="production_capacity" id="production_capacity_hidden" value="{{ old('production_capacity') }}">
             </div>
 
             <div class="form-group">
                 <label class="form-label">Negara Tujuan</label>
-                <input type="text" name="target_countries" class="form-input" placeholder="Contoh: Jepang, UAE, Amerika">
+                <input type="text" name="target_countries" class="form-input" placeholder="Contoh: Jepang, UAE, Amerika" value="{{ old('target_countries') }}">
                 <div class="form-hint">Pisahkan dengan koma</div>
             </div>
 
             <div class="form-group">
                 <label class="form-label">Sertifikasi</label>
-                <input type="text" name="certifications" class="form-input" placeholder="Contoh: Halal, SNI, Organic">
+                <input type="text" name="certifications" class="form-input" placeholder="Contoh: Halal, SNI, Organic" value="{{ old('certifications') }}">
                 <div class="form-hint">Pisahkan dengan koma</div>
             </div>
 
             <div class="form-group">
                 <label class="form-label">Foto Produk</label>
-                <input type="file" name="images" class="form-input" accept="image/jpeg,image/png,image/webp">
+                {{-- accept diperluas: jpeg,jpg,png,webp --}}
+                <input type="file" name="images" class="form-input" accept="image/jpeg,image/jpg,image/png,image/webp,.jpg,.jpeg,.png,.webp">
+                <div class="form-hint">Format: JPG, PNG, WEBP. Maks 5MB.</div>
             </div>
 
             <div class="modal-actions">
@@ -637,7 +523,8 @@
 
             <div class="form-group">
                 <label class="form-label">Foto Produk <span style="color:#7FA09A;font-weight:400">(kosongkan jika tidak diubah)</span></label>
-                <input type="file" name="images" class="form-input" accept="image/jpeg,image/png,image/webp">
+                <input type="file" name="images" class="form-input" accept="image/jpeg,image/jpg,image/png,image/webp,.jpg,.jpeg,.png,.webp">
+                <div class="form-hint">Format: JPG, PNG, WEBP. Maks 5MB.</div>
             </div>
 
             <div class="modal-actions">
@@ -715,10 +602,7 @@
             document.getElementById('edit_capacity_amount').value = amount;
             const selectEl = document.getElementById('edit_capacity_unit');
             for (let i = 0; i < selectEl.options.length; i++) {
-                if (selectEl.options[i].value === unit) {
-                    selectEl.selectedIndex = i;
-                    break;
-                }
+                if (selectEl.options[i].value === unit) { selectEl.selectedIndex = i; break; }
             }
             document.getElementById('edit_production_capacity_hidden').value = capacity;
         } else {
