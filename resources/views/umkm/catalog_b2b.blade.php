@@ -186,7 +186,6 @@
     .card-img-placeholder {
         width: 100%; height: 100%;
         display: flex; align-items: center; justify-content: center;
-        font-size: 42px;
     }
 
     .card-badges {
@@ -296,7 +295,7 @@
         color: var(--gray-400);
     }
 
-    .empty-state-icon  { font-size: 56px; margin-bottom: 16px; }
+    .empty-state-icon  { margin-bottom: 16px; }
     .empty-state-title { font-size: 18px; font-weight: 700; color: var(--gray-500); margin-bottom: 8px; }
     .empty-state-desc  { font-size: 14px; max-width: 360px; margin: 0 auto; line-height: 1.6; }
 
@@ -363,7 +362,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 72px;
         flex-shrink: 0;
     }
 
@@ -669,16 +667,6 @@
                 $certs = $product->certifications ?? [];
                 $images = $product->images ?? [];
                 $imgSrc = count($images) ? $images[0] : null;
-                $categoryEmoji = match($product->category) {
-                    'kopi'      => '☕',
-                    'coklat'    => '🍫',
-                    'batik'     => '🎨',
-                    'kerajinan' => '🪵',
-                    'teh'       => '🍵',
-                    'kosmetik'  => '✨',
-                    'makanan'   => '🌶️',
-                    default     => '📦',
-                };
                 $countries = $product->target_countries ?? [];
                 $countryNames = [
                     'MY'=>'Malaysia','SG'=>'Singapura','JP'=>'Jepang','US'=>'Amerika',
@@ -695,7 +683,11 @@
                     @if($imgSrc)
                         <img src="{{ $imgSrc }}" alt="{{ $product->name }}" loading="lazy">
                     @else
-                        <div class="card-img-placeholder">{{ $categoryEmoji }}</div>
+                        <div class="card-img-placeholder">
+                            <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2" style="color:var(--green-mid);opacity:.4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                            </svg>
+                        </div>
                     @endif
 
                     {{-- Cert badges --}}
@@ -745,7 +737,11 @@
 
         @empty
             <div class="empty-state">
-                <div class="empty-state-icon">🔍</div>
+                <div class="empty-state-icon">
+                    <svg width="56" height="56" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2" style="color:var(--gray-300)">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
                 <div class="empty-state-title">Produk tidak ditemukan</div>
                 <div class="empty-state-desc">Coba ubah filter atau kata kunci pencarian untuk menemukan produk yang kamu cari.</div>
             </div>
@@ -771,17 +767,14 @@
 <script>
     const productsData = JSON.parse('@json($products->items())');
 
-    const categoryEmoji = {
-        kopi:'☕', coklat:'🍫', batik:'🎨', kerajinan:'🪵',
-        teh:'🍵', kosmetik:'✨', makanan:'🌶️'
-    };
-
     const countryNames = {
         MY:'Malaysia', SG:'Singapura', JP:'Jepang', US:'Amerika Serikat',
         AU:'Australia', AE:'UAE', DE:'Jerman', CN:'China', KR:'Korea', GB:'Inggris'
     };
 
     const waIcon = '<svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.855L0 24l6.352-1.503A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.004-1.371l-.357-.213-3.712.877.938-3.614-.234-.371A9.796 9.796 0 012.182 12C2.182 6.574 6.574 2.182 12 2.182c5.427 0 9.818 4.392 9.818 9.818 0 5.427-4.391 9.818-9.818 9.818z"/></svg>';
+
+    const placeholderSvg = '<svg width="64" height="64" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.2" style="color:rgba(255,255,255,0.3)"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>';
 
     function openModal(id) {
         const p = productsData.find(x => x.id == id);
@@ -790,7 +783,6 @@
         const certs     = p.certifications    ?? [];
         const images    = p.images            ?? [];
         const countries = p.target_countries  ?? [];
-        const emoji     = categoryEmoji[p.category] ?? '📦';
         const capDisplay = p.production_capacity || '—';
         const priceStr   = p.price_usd > 0 ? 'USD ' + Number(p.price_usd).toFixed(2) : 'Nego';
 
@@ -809,7 +801,7 @@
 
         const imgHtml = images[0]
             ? '<img id="modalMainImg" src="' + images[0] + '" alt="' + p.name + '" style="width:100%;height:220px;object-fit:cover;flex-shrink:0;">'
-            : '<div class="modal-left-placeholder">' + emoji + '</div>';
+            : '<div class="modal-left-placeholder">' + placeholderSvg + '</div>';
 
         const photosHtml = images.length > 1
             ? '<div class="detail-section"><div class="detail-section-label">Foto Produk</div><div class="modal-photos">' +
@@ -879,7 +871,7 @@
         }
     });
 
-    //Search
+    // Search
     let debounceTimer;
     document.getElementById('searchInput').addEventListener('input', function() {
         clearTimeout(debounceTimer);

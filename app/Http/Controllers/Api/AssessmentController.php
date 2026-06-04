@@ -119,8 +119,7 @@ class AssessmentController extends Controller
             'priority_actions'           => $assessmentResult['priority_actions']           ?? [],
             'recommended_certifications' => $assessmentResult['recommended_certifications'] ?? [],
         ];
-
-        // Tetap simpan session untuk halaman result
+        
         session(['last_assessment' => $result]);
 
         return response()->json($result);
@@ -176,10 +175,6 @@ class AssessmentController extends Controller
             ],
         ];
     }
-
-    // ------------------------------------------------------------------
-    // Private helpers
-    // ------------------------------------------------------------------
 
     private function getReadinessLevel(int $score): string
     {
