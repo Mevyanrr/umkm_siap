@@ -703,6 +703,7 @@
                     'AU'=>'Australia','AE'=>'UAE','DE'=>'Jerman','CN'=>'China',
                     'KR'=>'Korea','GB'=>'Inggris',
                 ];
+                $capDisplay = $product->production_capacity ?? '—';
             @endphp
 
             <div class="product-card" onclick="openModal('{{ $product->id }}')">
@@ -740,8 +741,7 @@
                     <div class="card-seller">{{ $product->seller->name ?? '—' }}</div>
                     <div class="card-capacity-label">Kapasitas</div>
                     <div class="card-capacity-value">
-                        {{ number_format((int) $product->production_capacity) }}
-                        {{ str_contains(strtolower($product->category), 'batik') || str_contains(strtolower($product->category), 'kerajinan') ? 'pcs' : 'kg' }}/bulan
+                        {{ $capDisplay }}
                     </div>
                 </div>
 
@@ -813,9 +813,8 @@
         const images    = p.images            ?? [];
         const countries = p.target_countries  ?? [];
         const emoji     = categoryEmoji[p.category] ?? '📦';
-        const cap       = Number(p.production_capacity).toLocaleString('id-ID');
-        const priceStr  = p.price_usd > 0 ? 'USD ' + Number(p.price_usd).toFixed(2) : 'Nego';
-        const unitLabel = ['batik','kerajinan'].includes(p.category) ? 'pcs' : 'kg';
+        const capDisplay = p.production_capacity || '—';
+        const priceStr   = p.price_usd > 0 ? 'USD ' + Number(p.price_usd).toFixed(2) : 'Nego';
 
         const badgesHtml = certs.map(c => {
             const cls = c === 'SNI' ? 'badge-sni' : c === 'Halal' ? 'badge-halal' : c === 'ISO' ? 'badge-iso' : 'badge-organic';
@@ -873,7 +872,7 @@
                 '</div>' +
                 '<div class="modal-right">' +
                     '<div class="detail-row-2">' +
-                        '<div class="detail-box"><div class="detail-section-label">Kapasitas Produksi</div><div class="detail-section-value accent">' + cap + ' ' + unitLabel + '/bulan</div></div>' +
+                        '<div class="detail-box"><div class="detail-section-label">Kapasitas Produksi</div><div class="detail-section-value accent">' + capDisplay + '</div></div>' +
                         '<div class="detail-box"><div class="detail-section-label">Kategori</div><div class="detail-section-value">' + catLabel + '</div></div>' +
                     '</div>' +
                     descHtml +

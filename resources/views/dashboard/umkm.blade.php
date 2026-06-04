@@ -2,183 +2,194 @@
 
 @push('styles')
 <style>
-    :root { --sidebar-w: 240px; }
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+        --sidebar-w: 240px;
+        --green:       #0B6E5E;
+        --green-dark:  #084D42;
+        --green-light: #E8F5F2;
+        --gold:        #F5B800;
+        --white:       #ffffff;
+        --bg:          #F4F7F6;
+        --text:        #1A2E2B;
+        --muted:       #7A9590;
+        --border:      #D8E5E2;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
         display: flex;
         min-height: 100vh;
-        background: #f7f8fa;
+        background: var(--bg);
         font-family: 'Plus Jakarta Sans', sans-serif;
+        color: var(--text);
     }
 
-    /* ===== SIDEBAR (sama persis kayak assessment Flo) ===== */
+    /* ─── SIDEBAR ─── */
     .sidebar {
         width: var(--sidebar-w);
         background: var(--white);
-        border-right: 1px solid #e8ecef;
+        border-right: 1px solid var(--border);
         display: flex;
         flex-direction: column;
         position: fixed;
-        top: 0; left: 0; bottom: 0;
+        inset: 0 auto 0 0;
         z-index: 100;
-        padding: 28px 0 24px;
+        padding: 24px 0;
     }
 
     .sidebar-brand {
         display: flex; align-items: center; gap: 10px;
-        padding: 0 24px 28px;
-        border-bottom: 1px solid #e8ecef;
+        padding: 0 20px 20px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 8px;
     }
-    .sidebar-brand img { height: 36px; width: auto; object-fit: contain; }
-    .sidebar-brand .role-badge {
-        font-size: 10px; font-weight: 700;
+    .sidebar-brand img { height: 34px; width: auto; object-fit: contain; }
+    .role-badge {
+        font-size: 10px; font-weight: 700; letter-spacing: 0.4px;
         color: var(--white); background: var(--green);
-        padding: 3px 8px; border-radius: 20px; letter-spacing: 0.5px;
+        padding: 3px 8px; border-radius: 20px;
     }
 
-    .sidebar-section-label {
+    .sidebar-section {
         font-size: 10px; font-weight: 700; letter-spacing: 1px;
-        color: #aab0bb; text-transform: uppercase;
-        padding: 20px 24px 8px;
+        color: #B0BEC5; text-transform: uppercase;
+        padding: 16px 20px 6px;
     }
 
-    .sidebar-nav { display: flex; flex-direction: column; gap: 2px; padding: 0 12px; }
+    .sidebar-nav { display: flex; flex-direction: column; gap: 2px; padding: 0 10px; }
 
     .nav-item {
         display: flex; align-items: center; gap: 10px;
-        padding: 10px 14px; border-radius: 10px;
-        font-size: 14px; font-weight: 500; color: #555;
-        cursor: pointer; text-decoration: none;
+        padding: 9px 12px; border-radius: 9px;
+        font-size: 13.5px; font-weight: 500; color: #607D8B;
+        text-decoration: none;
         transition: background 0.15s, color 0.15s;
     }
-    .nav-item:hover { background: #f0f2f5; color: var(--text-black); }
-    .nav-item.active { background: var(--green-light); color: var(--green-dark); font-weight: 600; }
-    .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .nav-item:hover  { background: #F0F4F3; color: var(--text); }
+    .nav-item.active { background: var(--green-light); color: var(--green); font-weight: 700; }
+    .nav-item svg    { width: 17px; height: 17px; flex-shrink: 0; }
 
     .sidebar-spacer { flex: 1; }
 
     .sidebar-user {
-        margin: 0 12px;
-        padding: 12px 14px;
+        margin: 0 10px 4px;
+        padding: 10px 12px;
         display: flex; align-items: center; gap: 10px;
-        border-radius: 12px; background: #f7f8fa;
+        border-radius: 10px; background: var(--bg);
+        text-decoration: none;
     }
     .user-avatar {
-        width: 36px; height: 36px; border-radius: 50%;
-        background: linear-gradient(160deg, #0B6E5E, #13A085);
+        width: 34px; height: 34px; border-radius: 50%;
+        background: linear-gradient(145deg, #0B6E5E, #13A085);
         color: white; display: flex; align-items: center; justify-content: center;
-        font-size: 14px; font-weight: 700; flex-shrink: 0;
+        font-size: 13px; font-weight: 700; flex-shrink: 0;
     }
-    .user-info .user-name { font-size: 13px; font-weight: 600; color: var(--text-black); }
-    .user-info .user-sub  { font-size: 11px; color: #aab0bb; }
+    .user-name { font-size: 13px; font-weight: 600; color: var(--text); }
+    .user-sub  { font-size: 11px; color: var(--muted); }
 
     .sidebar-logout {
         display: flex; align-items: center; gap: 8px;
-        margin: 8px 12px 0;
-        padding: 10px 14px; border-radius: 10px;
-        font-size: 13px; color: #e54b4b; font-weight: 500;
-        cursor: pointer; transition: background 0.15s;
-        background: none; border: none; width: 100%; text-align: left;
-        font-family: 'Plus Jakarta Sans', sans-serif;
+        margin: 0 10px;
+        padding: 9px 12px; border-radius: 9px;
+        font-size: 13px; color: #E53935; font-weight: 500;
+        background: none; border: none; width: calc(100% - 20px);
+        cursor: pointer; font-family: inherit;
+        transition: background 0.15s;
     }
-    .sidebar-logout:hover { background: #fff0f0; }
+    .sidebar-logout:hover { background: #FFF3F3; }
 
-    /* ===== MAIN ===== */
-    .main-content {
+    /* ─── MAIN ─── */
+    .main {
         margin-left: var(--sidebar-w);
         flex: 1;
-        padding: 40px 48px;
-        background: #F7FAF9;
+        padding: 36px 44px;
     }
 
-    .page-header { margin-bottom: 28px; }
-    .page-header h1 { font-size: 26px; font-weight: 800; color: var(--text-black); margin-bottom: 6px; }
-    .page-header p  { font-size: 14px; color: var(--text-muted); }
-    .page-header p span { color: #0B6E5E; font-weight: 600; }
+    .page-title   { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+    .page-subtitle { font-size: 13.5px; color: var(--muted); margin-bottom: 28px; }
+    .page-subtitle strong { color: var(--green); font-weight: 700; }
 
-    /* ===== PROGRESS CARD ===== */
+    /* ─── PROGRESS CARD ─── */
     .progress-card {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: linear-gradient(135deg, #084D42 0%, #0D8F7C 100%);
-        border-radius: 18px;
-        padding: 28px 32px;
-        margin-bottom: 24px;
+        display: flex; justify-content: space-between; align-items: center; gap: 24px;
+        background: linear-gradient(135deg, #084D42 0%, #0E9E88 100%);
+        border-radius: 20px; padding: 28px 32px; margin-bottom: 24px;
     }
+    .pc-left { flex: 1; }
+    .pc-heading { color: #fff; font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+    .pc-sub     { color: rgba(255,255,255,0.65); font-size: 12px; margin-bottom: 16px; }
 
-    .progress-card h2 { color: #fff; font-size: 20px; font-weight: bold; margin-bottom: 6px; }
-    .progress-card p  { color: rgba(255,255,255,0.75); font-size: 12px; margin-bottom: 18px; }
+    .pbar-wrap { background: rgba(255,255,255,0.2); border-radius: 8px; height: 7px; width: 300px; margin-bottom: 6px; }
+    .pbar-fill { background: var(--gold); border-radius: 8px; height: 7px; transition: width 0.6s ease; }
+    .pbar-pct  { color: rgba(255,255,255,0.75); font-size: 11.5px; margin-bottom: 18px; }
 
-    .progress-bar-wrap {
-        background: rgba(255,255,255,0.2);
-        border-radius: 10px; height: 8px; width: 280px; margin-bottom: 6px;
+    .btn-start {
+        display: inline-block; text-decoration: none;
+        background: var(--gold); color: #1A1000;
+        font-size: 12px; font-weight: 700;
+        padding: 8px 18px; border-radius: 8px;
+        transition: opacity 0.15s;
     }
-    .progress-bar-fill { background: #F5B800; border-radius: 10px; height: 8px; width: 65%; }
-    .progress-pct { color: rgba(255,255,255,0.8); font-size: 12px; margin-bottom: 18px; }
+    .btn-start:hover { opacity: 0.85; }
 
-    .btn-assessment {
-        background: #F5B800; color: #1A1A00;
-        font-size: 12px; font-weight: bold;
-        padding: 8px 18px; border-radius: 8px; border: none;
-        cursor: pointer; text-decoration: none; display: inline-block;
-        transition: opacity 0.15s; font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-    .btn-assessment:hover { opacity: 0.88; }
-
+    /* Score circle */
     .score-circle {
         display: flex; flex-direction: column;
         align-items: center; justify-content: center;
-        background: rgba(255,255,255,0.11);
-        border: 2px solid rgba(255,255,255,0.25);
-        border-radius: 50%; width: 96px; height: 96px; flex-shrink: 0;
+        background: rgba(255,255,255,0.1);
+        border: 2px solid rgba(255,255,255,0.22);
+        border-radius: 50%; width: 100px; height: 100px; flex-shrink: 0;
     }
-    .score-num { color: #F5B800; font-size: 38px; font-weight: bold; line-height: 1; }
-    .score-label { color: rgba(255,255,255,0.7); font-size: 11px; margin-top: 3px; }
+    .score-num   { color: var(--gold); font-size: 40px; font-weight: 800; line-height: 1; }
+    .score-label { color: rgba(255,255,255,0.65); font-size: 11px; margin-top: 3px; letter-spacing: 0.5px; }
 
-    /* ===== TODO LIST ===== */
+    /* ─── TODO CARD ─── */
     .todo-card {
-        background: #fff; border-radius: 14px;
-        border: 1px solid #D8E5E2; overflow: hidden;
+        background: var(--white); border-radius: 16px;
+        border: 1px solid var(--border); overflow: hidden;
     }
-    .todo-header {
-        padding: 18px 22px; border-bottom: 1px solid #D8E5E2;
-        color: #1A3530; font-size: 14px; font-weight: bold;
+    .todo-hdr {
+        padding: 16px 22px; border-bottom: 1px solid var(--border);
+        font-size: 14px; font-weight: 700; color: var(--text);
     }
+
     .todo-item {
         display: flex; align-items: center; gap: 14px;
-        padding: 14px 22px; border-bottom: 1px solid #F0F4F3;
+        padding: 14px 22px; border-bottom: 1px solid #EEF3F2;
+        transition: background 0.12s;
     }
     .todo-item:last-child { border-bottom: none; }
+    .todo-item:hover { background: #F9FBFB; }
 
-    .check-done {
-        width: 22px; height: 22px; background: #0B6E5E;
+    .chk-done {
+        width: 22px; height: 22px; background: var(--green);
         border-radius: 7px; display: flex; align-items: center;
         justify-content: center; flex-shrink: 0;
-        color: white; font-size: 11px; font-weight: bold;
+        color: white; font-size: 12px; font-weight: 700;
     }
-    .check-pending {
+    .chk-open {
         width: 22px; height: 22px;
-        border: 2px solid #D8E5E2; border-radius: 7px; flex-shrink: 0;
+        border: 2px solid var(--border); border-radius: 7px; flex-shrink: 0;
     }
-    .todo-title-done { color: #A0B8B3; font-size: 13px; text-decoration: line-through; }
-    .todo-title-pending { color: #1A3530; font-size: 13px; }
-    .todo-sub { color: #7FA09A; font-size: 11px; margin-top: 2px; }
+    .todo-ttl-done { color: #A8BEBB; font-size: 13px; text-decoration: line-through; }
+    .todo-ttl      { color: var(--text); font-size: 13px; font-weight: 600; }
+    .todo-sub      { color: var(--muted); font-size: 11.5px; margin-top: 2px; }
 </style>
 @endpush
 
 @section('content')
 
-<!-- SIDEBAR -->
-<div class="sidebar">
+{{-- ── SIDEBAR ── --}}
+<aside class="sidebar">
     <div class="sidebar-brand">
         <img src="{{ asset('images/logo.png') }}" alt="UMKM SIAP">
         <span class="role-badge">UMKM</span>
     </div>
 
-    <span class="sidebar-section-label">Menu Utama</span>
+    <span class="sidebar-section">Menu Utama</span>
     <nav class="sidebar-nav">
         <a href="{{ route('dashboard.umkm') }}" class="nav-item active">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
@@ -204,10 +215,10 @@
 
     <div class="sidebar-spacer"></div>
 
-    <span class="sidebar-section-label">Akun</span>
+    <span class="sidebar-section">Akun</span>
     <nav class="sidebar-nav">
         <a href="{{ route('umkm.profile') }}" class="nav-item">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
             Profil UMKM
         </a>
         <a href="#" class="nav-item">
@@ -216,22 +227,14 @@
         </a>
     </nav>
 
-    <div style="height: 12px"></div>
+    <div style="height:10px"></div>
 
     @auth
-    <a href="{{ route('umkm.profile') }}" class="sidebar-user" style="text-decoration:none;">
-        <div class="user-avatar">
-            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-        </div>
-        <div class="user-info">
+    <a href="{{ route('umkm.profile') }}" class="sidebar-user">
+        <div class="user-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
+        <div>
             <div class="user-name">{{ Auth::user()->name }}</div>
-            <div class="user-sub">
-                @if(Auth::user()->provinsi)
-                    UMKM · {{ Auth::user()->provinsi }}
-                @else
-                    UMKM
-                @endif
-            </div>
+            <div class="user-sub">UMKM</div>
         </div>
     </a>
     @endauth
@@ -239,85 +242,130 @@
     <form method="POST" action="{{ route('logout') }}">
         @csrf
         <button type="submit" class="sidebar-logout">
-            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
             Keluar
         </button>
     </form>
-</div>
+</aside>
 
-<!-- MAIN CONTENT -->
-<div class="main-content">
-    <div class="page-header">
-        <h1>Dashboard UMKM</h1>
-        <p>
-            Selamat datang kembali,
-            @auth<span>{{ Auth::user()->name }}</span>@endauth!
-            Lihat progres ekspor Anda.
-        </p>
-    </div>
+{{-- ── MAIN ── --}}
+<div class="main">
 
-    <!-- Progress Card -->
+    <h1 class="page-title">Dashboard UMKM</h1>
+    <p class="page-subtitle">
+        Selamat datang kembali,
+        @auth<strong>{{ Auth::user()->name }}</strong>@endauth!
+        Pantau progres ekspor kamu di sini.
+    </p>
+
+    {{-- Progress Card --}}
     <div class="progress-card">
-        <div>
-            <h2>Progres Kesiapan Ekspor Anda</h2>
-            <p>Selesaikan langkah-langkah berikut untuk 100% siap ekspor</p>
-            <div class="progress-bar-wrap">
-                <div class="progress-bar-fill"></div>
+        <div class="pc-left">
+            <div class="pc-heading">Progres Kesiapan Ekspor</div>
+            <div class="pc-sub">Selesaikan semua langkah untuk 100% siap ekspor</div>
+            <div class="pbar-wrap">
+                <div class="pbar-fill" style="width: {{ $todoProgress['pct'] }}%"></div>
             </div>
-            <div class="progress-pct">65% Lengkap</div>
-            <a href="{{ route('umkm.assessment') }}" class="btn-assessment">
-                Lanjutkan Assessment →
+            <div class="pbar-pct">{{ $todoProgress['pct'] }}% Lengkap — {{ $todoProgress['done'] }}/{{ $todoProgress['total'] }} selesai</div>
+            <a href="{{ route('umkm.assessment') }}" class="btn-start">
+                {{ $todoProgress['assessment_selesai'] ? 'Lihat Hasil Assessment →' : 'Mulai Assessment →' }}
             </a>
         </div>
         <div class="score-circle">
-            <span class="score-num">65</span>
+            <span class="score-num">{{ $score }}</span>
             <span class="score-label">Score</span>
         </div>
     </div>
 
-    <!-- To-Do List -->
+    {{-- To-Do --}}
     <div class="todo-card">
-        <div class="todo-header">To-Do List: Menuju 100% Siap Ekspor</div>
+        <div class="todo-hdr">To-Do List: Menuju 100% Siap Ekspor</div>
 
+        {{-- 1. Profil --}}
         <div class="todo-item">
-            <div class="check-done">✓</div>
-            <div>
-                <div class="todo-title-done">Lengkapi profil UMKM</div>
-                <div class="todo-sub">Produk, kapasitas, sertifikasi</div>
-            </div>
+            @if($todoProgress['profil_lengkap'])
+                <div class="chk-done">✓</div>
+                <div>
+                    <div class="todo-ttl-done">Lengkapi profil UMKM</div>
+                    <div class="todo-sub">Nama, email, dan nomor HP sudah terisi</div>
+                </div>
+            @else
+                <div class="chk-open"></div>
+                <div>
+                    <div class="todo-ttl">Lengkapi profil UMKM</div>
+                    <div class="todo-sub">Isi nama, email, dan nomor HP kamu</div>
+                </div>
+            @endif
         </div>
 
+        {{-- 2. Assessment --}}
         <div class="todo-item">
-            <div class="check-done">✓</div>
-            <div>
-                <div class="todo-title-done">Selesaikan assessment kesiapan ekspor</div>
-                <div class="todo-sub">Score: 65/100</div>
-            </div>
+            @if($todoProgress['assessment_selesai'])
+                <div class="chk-done">✓</div>
+                <div>
+                    <div class="todo-ttl-done">Selesaikan assessment kesiapan ekspor</div>
+                    <div class="todo-sub">Skor: {{ $score }}/100</div>
+                </div>
+            @else
+                <div class="chk-open"></div>
+                <div>
+                    <div class="todo-ttl">Selesaikan assessment kesiapan ekspor</div>
+                    <div class="todo-sub">Belum ada assessment</div>
+                </div>
+            @endif
         </div>
 
+        {{-- 3. Produk — minimal 3 --}}
         <div class="todo-item">
-            <div class="check-pending"></div>
-            <div>
-                <div class="todo-title-pending">Upload minimal 3 produk ke katalog</div>
-                <div class="todo-sub">1 produk diupload</div>
-            </div>
+            @if($todoProgress['produk_cukup'])
+                <div class="chk-done">✓</div>
+                <div>
+                    <div class="todo-ttl-done">Upload minimal 3 produk ke katalog</div>
+                    <div class="todo-sub">{{ $todoProgress['produk_count'] }} produk diupload</div>
+                </div>
+            @else
+                <div class="chk-open"></div>
+                <div>
+                    <div class="todo-ttl">Upload minimal 3 produk ke katalog</div>
+                    <div class="todo-sub">{{ $todoProgress['produk_count'] }} dari 3 produk diupload</div>
+                </div>
+            @endif
         </div>
 
+        {{-- 4. Sertifikasi --}}
         <div class="todo-item">
-            <div class="check-pending"></div>
-            <div>
-                <div class="todo-title-pending">Tambahkan sertifikasi (Halal, SNI, Organic)</div>
-                <div class="todo-sub">Belum ada sertifikasi</div>
-            </div>
+            @if($todoProgress['ada_sertifikasi'])
+                <div class="chk-done">✓</div>
+                <div>
+                    <div class="todo-ttl-done">Tambahkan sertifikasi (Halal / SNI)</div>
+                    <div class="todo-sub">Sertifikasi sudah ada</div>
+                </div>
+            @else
+                <div class="chk-open"></div>
+                <div>
+                    <div class="todo-ttl">Tambahkan sertifikasi (Halal / SNI)</div>
+                    <div class="todo-sub">Jawab pertanyaan Halal & SNI di assessment</div>
+                </div>
+            @endif
         </div>
 
+        {{-- 5. Buyer --}}
         <div class="todo-item">
-            <div class="check-pending"></div>
-            <div>
-                <div class="todo-title-pending">Kontak minimal 2 buyer potensial</div>
-                <div class="todo-sub">0 buyer dihubungi</div>
-            </div>
+            @if($todoProgress['ada_buyer'])
+                <div class="chk-done">✓</div>
+                <div>
+                    <div class="todo-ttl-done">Kontak minimal 2 buyer potensial</div>
+                    <div class="todo-sub">Sudah memiliki buyer potensial</div>
+                </div>
+            @else
+                <div class="chk-open"></div>
+                <div>
+                    <div class="todo-ttl">Kontak minimal 2 buyer potensial</div>
+                    <div class="todo-sub">Jawab pertanyaan buyer potensial di assessment</div>
+                </div>
+            @endif
         </div>
+
     </div>
 </div>
 
@@ -330,8 +378,7 @@
             localStorage.setItem('token', '{{ session("jwt_token") }}');
             localStorage.setItem('user', JSON.stringify({
                 name: '{{ Auth::user()->name }}',
-                role: '{{ Auth::user()->role }}',
-                provinsi: '{{ Auth::user()->provinsi ?? "" }}'
+                role: '{{ Auth::user()->role }}'
             }));
         </script>
         @endpush

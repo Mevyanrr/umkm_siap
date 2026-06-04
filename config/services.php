@@ -22,7 +22,10 @@ return [
     // ── Tambahan untuk UMKM SIAP ──────────────────────────────────────────
 
     'gemini' => [
-        'api_key' => env('GEMINI_API_KEY'),
+        'api_key'   => env('GEMINI_API_KEY'),
+        'api_key_2' => env('GEMINI_API_KEY_2'),
+        'api_key_3' => env('GEMINI_API_KEY_3'),
+        'api_key_4' => env('GEMINI_API_KEY_4'),
     ],
 
     'bps' => [

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Assessment;
 use App\Services\GeminiService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AssessmentController extends Controller
 {
@@ -92,7 +94,19 @@ class AssessmentController extends Controller
             score:           $score
         );
 
+        // Simpan ke database
+        $assessment = Assessment::create([
+            'user_id'          => Auth::id(),
+            'answers'          => $answers,
+            'product_category' => $productCategory,
+            'target_country'   => 'Global',
+            'score'            => $score,
+            'level'            => $level,
+            'ai_prediction'    => $assessmentResult,
+        ]);
+
         $result = [
+            'assessment_id'              => $assessment->id,
             'score'                      => $score,
             'level'                      => $level,
             'product_category'           => $productCategory,
@@ -104,6 +118,7 @@ class AssessmentController extends Controller
             'recommended_certifications' => $assessmentResult['recommended_certifications'] ?? [],
         ];
 
+        // Tetap simpan session untuk halaman result
         session(['last_assessment' => $result]);
 
         return response()->json($result);

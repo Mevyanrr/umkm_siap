@@ -10,6 +10,8 @@ use App\Http\Controllers\Web\MarketWebController;
 use App\Http\Controllers\Web\BuyerController;
 use App\Http\Controllers\Web\WhistlistController;
 use App\Http\Controllers\Web\BuyerProfileController;
+use App\Http\Controllers\Web\DashboardController;
+
 
 // Landing Page
 Route::get('/', function () {
@@ -65,9 +67,8 @@ Route::post('/login/buyer', [WebAuthController::class, 'login'])
 Route::middleware('auth')->group(function () {
 
     // Dashboard UMKM
-    Route::get('/umkm/dashboard', function () {
-        return view('dashboard.umkm');
-    })->name('dashboard.umkm');
+    Route::get('/umkm/dashboard', [DashboardController::class, 'umkm'])
+    ->name('dashboard.umkm');
 
     // BUYER
     // Dashboard Buyer & Saved Products
